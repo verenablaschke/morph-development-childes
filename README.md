@@ -1,5 +1,7 @@
 # Acquisition Order of Functional Morphemes
 
+Project for the course [ENG-3040 First Language Acquisition](https://en.uit.no/education/courses/course?p_document_id=567082) at Universitetet i Tromsø, spring semester 2019.
+
 Order of acquisition of functional morphemes in English. Fourteen morphemes/categories presented by Brown (1973, p. 274), the first ten are presented by O'Grady (2005, p. 94):
 
 | 1.    | -PRESP                            |

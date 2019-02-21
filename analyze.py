@@ -8,14 +8,14 @@ DATA_PATH = 'data'
 
 class Condition(Enum):
     MATCH = 0
-    SUFFIX = 1
+    INFL = 1
 
 
-def match(query_word, query_condition, word):
+def match(query_word, query_condition, entry):
     if query_condition == Condition.MATCH:
-        return word == query_word
-    elif query_condition == Condition.SUFFIX:
-        return word.endswith('-' + query_word)
+        return entry[0] == query_word
+    elif query_condition == Condition.INFL:
+        return entry[3] == '-' + query_word
     else:
         raise ValueError('Condition {} does not exist.'
                          .format(query_condition))
@@ -28,13 +28,13 @@ def count_occurrences(corpus, query_word, query_condition, results, verbose=True
     n_sents = 0
     n_occ = 0
     for sent in corpus.tagged_morph_sents(speaker='CHI',
-                                    strip_space=True,
-                                    ):
+                                          strip_space=True,
+                                          ):
         n_sents += 1
-        for (word, _, stem, infl) in sent:
-            if match(query_word, query_condition, word):
+        for entry in sent:
+            if match(query_word, query_condition, entry):
                 n_occ += 1
-        print(sent)
+            print(sent)
     if n_sents > 0:
         try:
             prev_counts = results[(query_word, query_condition)][age]
@@ -54,7 +54,7 @@ def count_occurrences(corpus, query_word, query_condition, results, verbose=True
 # TODO traverse each file only once, i.e. one corpus reader per file
 
 
-# queries = [('PRESP', Condition.SUFFIX),  # -ing
+# queries = [('PRESP', Condition.INFL),  # -ing
 #            ('in', Condition.MATCH),
 #            ('on', Condition.MATCH)]
 
@@ -70,7 +70,7 @@ for f in glob.glob('data/Brown/Adam/*.xml'):
     f = f.replace('\\', '/')[5:]
     results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
                                 'PRESP',
-                                Condition.SUFFIX,
+                                Condition.INFL,
                                 results)
     results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
                                 'on',
