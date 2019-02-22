@@ -20,7 +20,15 @@ O'Grady (2005, p. 94):
 
 In how far does this hold up to for a larger English corpus? What about equivalents in another language (where existing)?
 
+
+## Implementation
+
+The code is written in Python 3.6.7.
+I use a version of NLTK's (Bird et al., 2009) corpus reader that I modified to parse the XML files.
+
 ## References
+
+Bird, Steven, Ewan Klein, and Edward Loper. _Natural Language Processing with Python: Analyzing Text with the Natural Language Toolkit._ O'Reilly Media, Inc., 2009.
 
 Brown, Roger. _A first language: The early stages._ Harvard U. Press, 1973.
 
