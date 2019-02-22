@@ -1,27 +1,14 @@
 import glob
 from enum import Enum
-from nltk.corpus.reader import CHILDESCorpusReader
+# Imports from other files in this directory:
+from corpusreader import CHILDESMorphFileReader
+from match import Matcher
 
 
 DATA_PATH = 'data'
 
 
-class Condition(Enum):
-    MATCH = 0
-    INFL = 1
-
-
-def match(query_word, query_condition, entry):
-    if query_condition == Condition.MATCH:
-        return entry[0] == query_word
-    elif query_condition == Condition.INFL:
-        return entry[3] == '-' + query_word
-    else:
-        raise ValueError('Condition {} does not exist.'
-                         .format(query_condition))
-
-
-def count_occurrences(corpus, query_word, query_condition, results, verbose=True):
+def count_occurrences(corpus, matcher, results, verbose=True):
     age = corpus.age(month=True)[0]
     if verbose:
         print(corpus.fileids(), age)
@@ -32,18 +19,21 @@ def count_occurrences(corpus, query_word, query_condition, results, verbose=True
                                           ):
         n_sents += 1
         for entry in sent:
-            if match(query_word, query_condition, entry):
+            if matcher.match(entry):
                 n_occ += 1
             print(sent)
     if n_sents > 0:
+        matcher_str = matcher.__str__()
         try:
-            prev_counts = results[(query_word, query_condition)][age]
-            results[(query_word, query_condition)][age] = [sum(x) for x in zip(prev_counts, (n_occ, n_sents))]
+            prev_counts = results[matcher_str][age]
+            results[matcher_str][age] = \
+                [sum(x) for x in zip(prev_counts, (n_occ, n_sents))]
         except KeyError:
             try:
-                results[(query_word, query_condition)][age] = [n_occ, n_sents]
+                results[matcher_str][age] = [n_occ, n_sents]
             except KeyError:
-                results[(query_word, query_condition)] = {age: [n_occ, n_sents]}
+                results[matcher_str] = \
+                    {age: [n_occ, n_sents]}
 
     if verbose:
         print(n_occ, n_sents, n_occ / n_sents if n_sents > 0 else 0)
@@ -59,9 +49,6 @@ def count_occurrences(corpus, query_word, query_condition, results, verbose=True
 #            ('on', Condition.MATCH)]
 
 
-from corpusreader import CHILDESMorphFileReader
-# CHILDESMorphFileReader(DATA_PATH, 'Brown/Adam/020304.xml').tagged_morph_sents()
-
 # results:
 # {(query_word, query condition) -> {age -> [n_occ, n_sent]}}
 results = {}
@@ -69,16 +56,13 @@ i = 0  # TODO del
 for f in glob.glob('data/Brown/Adam/*.xml'):
     f = f.replace('\\', '/')[5:]
     results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
-                                'PRESP',
-                                Condition.INFL,
+                                Matcher('infl', 'PRESP'),
                                 results)
     results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
-                                'on',
-                                Condition.MATCH,
+                                Matcher('form', 'in'),
                                 results)
     results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
-                                'in',
-                                Condition.MATCH,
+                                Matcher('form', 'on'),
                                 results)
     i += 1  # TODO del
     if i > 3:

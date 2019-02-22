@@ -18,7 +18,7 @@ Order of acquisition of functional morphemes in English. Fourteen morphemes/cate
 O'Grady (2005, p. 94):
 > He decided that hewould say that an ending or aword had been “acquired” if it appeared in 90 percent or more of the contexts where it was needed in three consecutive recording sessions. (The sessions were held about two weeks apart over a period of many months.)
 
-In how far does this hold up to a larger English corpus? What about equivalents in another language (where existing)?
+In how far does this hold up to for a larger English corpus? What about equivalents in another language (where existing)?
 
 ## References
 

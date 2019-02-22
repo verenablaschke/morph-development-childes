@@ -125,7 +125,12 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
                             xmlinfl = xmlword.find(
                                 './/{%s}mor/{%s}mw/{%s}mk' % (NS, NS, NS)
                             )
-                            infl = '-' + xmlinfl.text  # VB: Originally word += '-' + xmlinfl.text
+                            infl_type = ''  # VB: Added infl_type and the try/except clause.
+                            try:
+                                infl_type = xmlinfl.attrib['type']
+                            except ValueError:
+                                pass
+                            infl = xmlinfl.text  # VB: Originally word += '-' + xmlinfl.text
                         except:
                             pass
                         # if there is a suffix
@@ -169,7 +174,7 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
                                 pass
                             if suffixTag:
                                 tag += "~" + suffixTag
-                            word = (word, tag, stem, infl)  # VB: Added stem, infl.
+                            word = (word, tag, stem, infl, infl_type)  # VB: Added stem, infl, infl_type.
                         # relational
                         # the gold standard is stored in
                         # <mor></mor><mor type="trn"><gra type="grt">
