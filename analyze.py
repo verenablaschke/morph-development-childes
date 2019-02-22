@@ -1,4 +1,6 @@
 import glob
+import numpy as np
+import matplotlib.pyplot as plt
 # Imports from other files in this directory:
 from corpusreader import CHILDESMorphFileReader
 from match import Matcher
@@ -48,16 +50,17 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('form', form='on'),                          # 2./3. on
             Matcher('infl_suffix_expl', infl='PL', suffix='s'),  # 4. PL -s
             Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
+            # TODO fix POSS query
             Matcher('infl_suffix_expl', infl='POSS', suffix='\'s'),  # 6. POSS 's
-            # 7. is, are when uncontractable
+            # # 7. is, are when uncontractable
             Matcher('form', form='the'),                         # 8. the, a
             Matcher('form', form='a'),                           # 8. the, a
-            # TODO 9. regular PAST
-            # TODO 10. 3.SG -s
+            Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST
+            Matcher('infl_suffix_expl', infl='3S', suffix='s')  # 10. 3.SG -s
             ]
 
 # results:
-# {(query_word, query condition) -> {age -> [n_occ, n_sent]}}
+# {query -> {age -> [n_occ, n_sent]}}
 results = {}
 i = 0  # TODO del
 for f in glob.glob('data/Brown/Adam/*.xml'):
@@ -67,9 +70,29 @@ for f in glob.glob('data/Brown/Adam/*.xml'):
                                     matcher,
                                     results)
 
-    i += 1  # TODO del
-    if i > 3:
-        break
+    # i += 1  # TODO del
+    # if i > 2:
+        # break
 
-for r in results:
-    print(r, results[r])
+# Visualization of the results
+fig, ax = plt.subplots()
+plots = []
+cmap = plt.get_cmap('jet')
+n_plots = len(results)
+colours = cmap(np.linspace(0, 1.0, n_plots))
+i = 1
+
+for (query, r), col in zip(results.items(), colours):
+    print(query, r)
+    months = r.keys()
+    plot, = plt.plot(months, [r[month][0] / r[month][1] for month in months],
+                     color=col, label=query)
+    plots.append(plot)
+    i += 1
+
+ax.set(xlabel='Age in months',
+       ylabel='Occurrences per utterance',
+       title='')
+plt.legend(handles=plots, loc=2)
+plt.show()
+# plt.savefig('filename.png', bbox_inches='tight')
