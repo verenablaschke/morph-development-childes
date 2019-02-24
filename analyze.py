@@ -1,3 +1,4 @@
+import copy
 import glob
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,6 +15,9 @@ def count_occurrences(corpus, matcher, results, verbose=True):
     if verbose:
         print(matcher)
         print(corpus.fileids(), age)
+    if age is None:
+        print('Age is None. Skipping file')
+        return results
     n_sents = 0
     n_occ = 0
     for sent in corpus.tagged_morph_sents(speaker='CHI',
@@ -23,9 +27,9 @@ def count_occurrences(corpus, matcher, results, verbose=True):
         for entry in sent:
             if matcher.match(entry):
                 n_occ += 1
-                if verbose:
-                    print(sent)
-    if n_sents > 0:
+                # if verbose:
+                #     print(sent)
+    if n_sents > 0:  # TODO smooth?
         matcher_str = matcher.__str__()
         try:
             prev_counts = results[matcher_str][age]
@@ -51,8 +55,8 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('infl_suffix_expl', infl='PL', suffix='s'),  # 4. PL -s
             Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
             # TODO fix POSS query
-            Matcher('infl_suffix_expl', infl='POSS', suffix='\'s'),  # 6. POSS 's
-            # # 7. is, are when uncontractable
+            # Matcher('infl_suffix_expl', infl='POSS', suffix='\'s'),  # 6. POSS 's
+            # TODO: 7. is, are when uncontractable  -> only verb in sentence, maybe can also be determined via dependency info?
             Matcher('form', form='the'),                         # 8. the, a
             Matcher('form', form='a'),                           # 8. the, a
             Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST
@@ -62,8 +66,9 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
 # results:
 # {query -> {age -> [n_occ, n_sent]}}
 results = {}
-i = 0  # TODO del
-for f in glob.glob('data/Brown/Adam/*.xml'):
+# i = 0  # TODO del
+# for f in glob.glob('data/Brown/Adam/*.xml'):
+for f in glob.glob('data/*/*/*.xml'):
     f = f.replace('\\', '/')[5:]
     for matcher in matchers:
         results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
@@ -82,14 +87,33 @@ n_plots = len(results)
 colours = cmap(np.linspace(0, 1.0, n_plots))
 i = 1
 
+min_month, max_month = -1, -1
+
 for (query, r), col in zip(results.items(), colours):
     print(query, r)
-    months = r.keys()
+    months = sorted(r.keys())
+
+    # Get the dimensions of the graph.
+    if min_month == -1 or min_month > months[0]:
+        min_month = months[0]
+    if max_month < months[-1]:
+        max_month = months[-1]
+
     plot, = plt.plot(months, [r[month][0] / r[month][1] for month in months],
                      color=col, label=query)
     plots.append(plot)
     i += 1
 
+plt.grid()
+xticks = np.arange(min_month, max_month + 1, step=3).tolist()
+xtick_labels = copy.deepcopy(xticks)
+for y in range(2, 6):
+    plt.axvline(x=y * 12, color='r')
+    xticks.append(y * 12)
+    xtick_labels[-1] = '{} yrs'.format(y)
+
+ax.set_xticks(xticks)
+ax.set_xticklabels(xtick_labels)
 ax.set(xlabel='Age in months',
        ylabel='Occurrences per utterance',
        title='')
