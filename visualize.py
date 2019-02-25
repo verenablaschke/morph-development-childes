@@ -16,9 +16,9 @@ def visualize(results, compare_total, display=True, filename=None):
     i = 1
 
     if compare_total:
-        comp_idx = 1
-    else:
         comp_idx = 2
+    else:
+        comp_idx = 1
 
     min_month, max_month = -1, -1
 
@@ -69,4 +69,4 @@ def visualize(results, compare_total, display=True, filename=None):
     if display:
         plt.show()
     if filename is not None:
-        plt.savefig('{}.png'.format(filename), bbox_inches='tight')
+        plt.savefig(filename, bbox_inches='tight')

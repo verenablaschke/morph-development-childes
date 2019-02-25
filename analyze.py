@@ -84,5 +84,5 @@ for f in glob.glob('data/*/*/*.xml'):
                                     matcher,
                                     results)
 
-visualize(results, compare_total=True)
-visualize(results, compare_total=False)
+visualize(results, compare_total=True, filename='output/total.png')
+visualize(results, compare_total=False, filename='output/adult.png')
