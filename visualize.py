@@ -7,6 +7,17 @@ import sys
 EMPTY_MONTH_MSG = 'No {}entries for month {}, query={}.'
 
 
+def valid(r, month, comp_idx):
+    if r[month][comp_idx] is None or r[month][comp_idx] <= 0:
+        msg = EMPTY_MONTH_MSG.format('' if compare_total else 'adult ',
+                                     month, query)
+        print(msg)
+        sys.stderr.write(msg + '\n')
+        return False
+    return True
+
+
+
 def visualize(results, compare_total, display=True, filename=None):
     fig, ax = plt.subplots()
     plots = []
@@ -35,14 +46,15 @@ def visualize(results, compare_total, display=True, filename=None):
         months_ok = []
         entries_ok = []
         for month in months:
-            if r[month][comp_idx] is None or r[month][comp_idx] <= 0:
-                msg = EMPTY_MONTH_MSG.format('' if compare_total else 'adult ',
-                                             month, query)
-                print(msg)
-                sys.stderr.write(msg + '\n')
+            if not valid(r, month, comp_idx=2):  # >1 utterance?
                 continue
             months_ok.append(month)
-            entries_ok.append(r[month][0] / r[month][comp_idx])
+            chi = r[month][0] / r[month][2]
+            if not compare_total:
+                if not valid(r, month, comp_idx=1):  # >1 adult utterance?
+                    continue
+                chi = chi / (r[month][1] / r[month][2])
+            entries_ok.append(chi)
 
         plot, = plt.plot(months_ok, entries_ok, color=col, label=query)
         plots.append(plot)
