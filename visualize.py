@@ -7,10 +7,9 @@ import sys
 EMPTY_MONTH_MSG = 'No {}entries for month {}, query={}.'
 
 
-def valid(r, month, comp_idx):
+def valid(r, query, compare_total, month, comp_idx):
     if r[month][comp_idx] is None or r[month][comp_idx] <= 0:
-        msg = EMPTY_MONTH_MSG.format('' if compare_total else 'adult ',
-                                     month, query)
+        msg = EMPTY_MONTH_MSG.format('' if compare_total else 'adult ', month, query)
         print(msg)
         sys.stderr.write(msg + '\n')
         return False
@@ -25,11 +24,6 @@ def visualize(results, compare_total, display=True, filename=None):
     n_plots = len(results)
     colours = cmap(np.linspace(0, 1.0, n_plots))
     i = 1
-
-    if compare_total:
-        comp_idx = 2
-    else:
-        comp_idx = 1
 
     min_month, max_month = -1, -1
 
@@ -46,12 +40,13 @@ def visualize(results, compare_total, display=True, filename=None):
         months_ok = []
         entries_ok = []
         for month in months:
-            if not valid(r, month, comp_idx=2):  # >1 utterance?
+            if not valid(r, query, compare_total, month, comp_idx=2):  # >1 utterance?
                 continue
             months_ok.append(month)
             chi = r[month][0] / r[month][2]
             if not compare_total:
-                if not valid(r, month, comp_idx=1):  # >1 adult utterance?
+                if not valid(r, query, compare_total, month, comp_idx=1):  # >1 adult utterance?
+                    months_ok = months_ok[:-1]
                     continue
                 chi = chi / (r[month][1] / r[month][2])
             entries_ok.append(chi)
@@ -78,7 +73,7 @@ def visualize(results, compare_total, display=True, filename=None):
            ylabel=ylabel,
            title='')
     plt.legend(handles=plots, loc=2)
-    if display:
-        plt.show()
     if filename is not None:
         plt.savefig(filename, bbox_inches='tight')
+    if display:
+        plt.show()
