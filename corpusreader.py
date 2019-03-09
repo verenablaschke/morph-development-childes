@@ -27,6 +27,7 @@ from nltk.corpus.reader import CHILDESCorpusReader
 from nltk.corpus.reader.xmldocs import ElementTree
 from nltk.util import LazyMap, LazyConcatenation
 
+
 # From nltk.corpus.reader.childes:
 # to resolve the namespace issue
 NS = 'http://www.talkbank.org/ns/talkbank'
@@ -40,47 +41,41 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
             fileids=None,
             speaker='ALL',
             # VB: Removed 'stem' keyword.
-            relation=None,
+            # VB: Removed 'relation' keyword.
             strip_space=True,
-            replace=False,
+            # VB: Removed 'replace' keyword since it appears to be broken.
         ):
-        # VB: Updated description of the returned tuple to include stem, infl.
+        # VB: Updated description.
             """
             :return: the given file(s) as a list of
                 sentences, each encoded as a list of ``(word,tag,stem,infl)`` tuples.
-            :rtype: list(list(tuple(str,str)))
-
             :param speaker: If specified, select specific speaker(s) defined
                 in the corpus. Default is 'ALL' (all participants). Common choices
                 are 'CHI' (the child), 'MOT' (mother), ['CHI','MOT'] (exclude
                 researchers)
-            :param relation: If true, then return tuples of ``(str,pos,relation_list)``.
-                If there is manually-annotated relation info, it will return
-                tuples of ``(str,pos,test_relation_list,str,pos,gold_relation_list)``
             :param strip_space: If true, then strip trailing spaces from word
                 tokens. Otherwise, leave the spaces on the tokens.
-            :param replace: If true, then use the replaced (intended) word instead
-                of the original word (e.g., 'wat' will be replaced with 'watch')
+            :rtype: list(list(tuple(str,str,str,str,str)))
             """
             sent = True
             pos = True
             if not self._lazy:
                 return [
                     self._get_morph_words(  # VB: Changed method from _get_words.
-                        fileid, speaker, sent, relation, pos, strip_space, replace
+                        fileid, speaker, sent, pos, strip_space
                     )
                     for fileid in self.abspaths(fileids)
                 ]
 
             get_words = lambda fileid: self._get_morph_words(  # VB: Changed method from _get_words.
-                fileid, speaker, sent, relation, pos, strip_space, replace
+                fileid, speaker, sent, pos, strip_space
             )
             return LazyConcatenation(LazyMap(get_words, self.abspaths(fileids)))
 
 
     # NLTK's _get_words method.
     def _get_morph_words(
-            self, fileid, speaker, sent, relation, pos, strip_space, replace  # VB: Removed 'stem' keyword.
+            self, fileid, speaker, sent, pos, strip_space  # VB: Removed stem/relation/replace keywords.
         ):
             if (
                 isinstance(speaker, str) and speaker != 'ALL'  # VB: Changed six.string_types to str.
@@ -91,19 +86,27 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
             results = []
             for xmlsent in xmldoc.findall('.//{%s}u' % NS):
                 sents = []
+                skip = False  # VB: Skip replacements.
                 # select speakers
                 if speaker == 'ALL' or xmlsent.get('who') in speaker:
                     for xmlword in xmlsent.findall('.//{%s}w' % NS):
+
+
+                        # VB DELETE
+                        if skip:
+                            skip = False
+                            sents[-1][-1] = xmlword.text
+                            print('->', xmlword.text)
+                            continue
+                        print(xmlword.text)
+                        if xmlword.find('.//{%s}replacement' % NS):
+                            print('REPLACEMENT')
+                            skip = True
+
                         infl = None
                         suffixStem = None
                         suffixTag = None
-                        # getting replaced words
-                        if replace and xmlsent.find('.//{%s}w/{%s}replacement' % (NS, NS)):
-                            xmlword = xmlsent.find(
-                                './/{%s}w/{%s}replacement/{%s}w' % (NS, NS, NS)
-                            )
-                        elif replace and xmlsent.find('.//{%s}w/{%s}wk' % (NS, NS)):
-                            xmlword = xmlsent.find('.//{%s}w/{%s}wk' % (NS, NS))
+                        # VB: Removed block for getting replaced words.
                         # get text
                         if xmlword.text:
                             word = xmlword.text
@@ -145,7 +148,7 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
                         if suffixStem:
                             word += "~" + suffixStem
                         # pos
-                        if relation or pos:
+                        if pos:  # VB: Originally 'if relation or pos:'.
                             try:
                                 xmlpos = xmlword.findall(".//{%s}c" % NS)
                                 xmlpos2 = xmlword.findall(".//{%s}s" % NS)
@@ -174,69 +177,8 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
                                 pass
                             if suffixTag:
                                 tag += "~" + suffixTag
-                            word = (word, tag, stem, infl, infl_type)  # VB: Added stem, infl, infl_type.
-                        # relational
-                        # the gold standard is stored in
-                        # <mor></mor><mor type="trn"><gra type="grt">
-                        # VB: Did not change the following part to keep the inflec-
-                        # tion information, as it is not necessary for my current
-                        # project.
-                        if relation == True:
-                            for xmlstem_rel in xmlword.findall(
-                                './/{%s}mor/{%s}gra' % (NS, NS)
-                            ):
-                                if not xmlstem_rel.get('type') == 'grt':
-                                    word = (
-                                        word[0],
-                                        word[1],
-                                        xmlstem_rel.get('index')
-                                        + "|"
-                                        + xmlstem_rel.get('head')
-                                        + "|"
-                                        + xmlstem_rel.get('relation'),
-                                    )
-                                else:
-                                    word = (
-                                        word[0],
-                                        word[1],
-                                        word[2],
-                                        word[0],
-                                        word[1],
-                                        xmlstem_rel.get('index')
-                                        + "|"
-                                        + xmlstem_rel.get('head')
-                                        + "|"
-                                        + xmlstem_rel.get('relation'),
-                                    )
-                            try:
-                                for xmlpost_rel in xmlword.findall(
-                                    './/{%s}mor/{%s}mor-post/{%s}gra' % (NS, NS, NS)
-                                ):
-                                    if not xmlpost_rel.get('type') == 'grt':
-                                        suffixStem = (
-                                            suffixStem[0],
-                                            suffixStem[1],
-                                            xmlpost_rel.get('index')
-                                            + "|"
-                                            + xmlpost_rel.get('head')
-                                            + "|"
-                                            + xmlpost_rel.get('relation'),
-                                        )
-                                    else:
-                                        suffixStem = (
-                                            suffixStem[0],
-                                            suffixStem[1],
-                                            suffixStem[2],
-                                            suffixStem[0],
-                                            suffixStem[1],
-                                            xmlpost_rel.get('index')
-                                            + "|"
-                                            + xmlpost_rel.get('head')
-                                            + "|"
-                                            + xmlpost_rel.get('relation'),
-                                        )
-                            except:
-                                pass
+                            word = [word, tag, stem, infl, infl_type, '']  # VB: Added stem, infl, infl_type and an empty string for replacements. Changed from tuple to list.
+                        # VB: Removed 'if relation == True:' block.                        
                         sents.append(word)
                     if sent or relation:
                         results.append(sents)
