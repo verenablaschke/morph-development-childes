@@ -1,17 +1,22 @@
 class Matcher:
 
-    __slots__ = ['condition', 'form', 'infl', 'suffix', 'post_rel']
+    __slots__ = ['condition', 'form', 'infl', 'suffix', 'rel', 'post_rel',
+                 'tag']
 
     def __init__(self, condition,
-                 form=None, infl=None, suffix=None, post_rel=None):
+                 form=None, infl=None, suffix=None, rel=None,
+                 post_rel=None, tag=None):
         self.condition = condition
         self.form = form
         self.infl = infl
         self.suffix = suffix
+        self.rel = rel
         self.post_rel = post_rel
+        self.tag = tag
 
     def match(self, entry):
-        return getattr(self, 'match_' + self.condition)(entry)
+        return getattr(self, 'match_' + self.condition)(entry) \
+            and entry.replacement == ''
 
     def match_form(self, entry):
         return entry.form == self.form
@@ -21,6 +26,14 @@ class Matcher:
             return entry.form.endswith(self.suffix)
         for sfx in self.suffix:
             if entry.form.endswith(sfx):
+                return True
+        return False
+
+    def match_rel(self, entry):
+        if isinstance(self.rel, str):
+            return entry.rel == self.rel
+        for r in self.rel:
+            if entry.rel == r:
                 return True
         return False
 
@@ -43,18 +56,20 @@ class Matcher:
     def match_infl_suffix_expl(self, entry):
         return self.match_suffix(entry) and self.match_infl_affix(entry)
 
-    def match_copula_uncontractible(self, entry):
-        return entry.tag == 'cop' and entry.rel in ['ROOT', 'COMP'] \
-            and entry.replacement == ''
+    def match_tag_rel(self, entry):
+        return self.match_tag(entry) and self.match_rel(entry)
 
-    def match_3sg_irregular(self, entry):
-        return entry.tag == 'v' and self.match_infl_fusion(entry)
+    def match_tag_infl_fusion(self, entry):
+        return self.match_tag(entry) and self.match_infl_fusion(entry)
 
     def match_postrel(self, entry):
         return entry.post_rel == self.post_rel
 
     def match_suffix_postrel(self, entry):
         return self.match_suffix(entry) and self.match_postrel(entry)
+
+    def match_tag(self, entry):
+        return entry.tag == self.tag
 
     def __str__(self):
         return 'Matcher({}, form={}, infl={}, suffix={})' \
@@ -72,18 +87,21 @@ class SentenceMatcher:
     def match(self, sent):
         return getattr(self, 'match_' + self.condition)(sent)
 
-    def match_copula_uncontractible(self, sent):
+    def match_uncontractible(self, sent):
         match = -1
+        aux_matcher = self.matcher.rel == 'AUX'
         for i, entry in enumerate(sent):
             if self.matcher.match(entry):
+                if aux_matcher and entry.stem == 'do':
+                    continue
                 match = i
                 break
 
-        # No uncontracted copula.
+        # No uncontracted copula/auxiliary verb.
         if match == - 1:
             return False
 
-        # Sentence-initial/final copula.
+        # Sentence-initial/final copula/aux.
         sent_last = len(sent) - 1
         if match == 0 or match == sent_last \
            or (match == sent_last - 1 and sent[-1].tag == 'PUNCT'):

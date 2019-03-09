@@ -85,15 +85,14 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('form', form='on'),                          # 2./3. on
             Matcher('infl_suffix_expl', infl='PL', suffix='s'),  # 4. regular PL
             Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
-            # TODO fix POSS query
-            Matcher('suffix_postrel', post_rel='POSS', suffix=['\'s', 's\'']),  # 6. POSS
-            SentenceMatcher(Matcher('copula_uncontractible'), 'copula_uncontractible'),  # 7. uncontractible COP
+            Matcher('suffix_postrel', post_rel='POSS', suffix=['\'s', 's\'']),  # 6. POSS -'s/-s'
+            SentenceMatcher(Matcher('tag_rel', tag='cop', rel=['ROOT', 'COMP']), 'uncontractible'),  # 7. uncontractible COP
             Matcher('form', form='the'),                         # 8. the, a
             Matcher('form', form='a'),                           # 8. the, a
             Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST
             Matcher('infl_suffix_expl', infl='3S', suffix='s'),  # 10. regular 3.SG
-            Matcher('3sg_irregular', infl='3S'),  # 11. irregular 3.SG
-            # 12. uncontractible AUX
+            Matcher('tag_infl_fusion', tag='v', infl='3S'),  # 11. irregular 3.SG
+            SentenceMatcher(Matcher('tag_rel', tag='mod', rel='AUX'), 'uncontractible'),  # 12. uncontractible AUX
             # 13. contractible COP
             # 14. contractible AUX
             ]
