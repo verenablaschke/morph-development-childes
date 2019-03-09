@@ -7,28 +7,33 @@ import sys
 EMPTY_MONTH_MSG = 'No {}entries for month {}, query={}.'
 
 
-def valid(r, query, compare_total, month, comp_idx):
+def valid(r, query, compare_adult, month, comp_idx):
     if r[month][comp_idx] is None or r[month][comp_idx] <= 0:
-        msg = EMPTY_MONTH_MSG.format('' if compare_total else 'adult ', month, query)
+        msg = EMPTY_MONTH_MSG.format('adult ', month, query if compare_adult
+                                     else '')
         print(msg)
         sys.stderr.write(msg + '\n')
         return False
     return True
 
 
+def visualize(results, compare_adult,
+              display=True, filename=None, verbose=True):
+    if verbose:
+        print()
+        print('--- Visualizing', filename)
 
-def visualize(results, compare_total, display=True, filename=None):
+    # Set up the plot.
     fig, ax = plt.subplots()
     plots = []
     cmap = plt.get_cmap('jet')
-    n_plots = len(results)
-    colours = cmap(np.linspace(0, 1.0, n_plots))
-    i = 1
+    colours = cmap(np.linspace(0, 1.0, len(results)))
 
-    min_month, max_month = -1, -1
+    min_month, max_month = -1, -1  # earliest/latest month
 
     for (query, r), col in zip(results.items(), colours):
-        print(query, r)
+        if verbose:
+            print(query, r)
         months = sorted(r.keys())
 
         # Get the dimensions of the graph.
@@ -37,23 +42,23 @@ def visualize(results, compare_total, display=True, filename=None):
         if max_month < months[-1]:
             max_month = months[-1]
 
+        # Check if there is at least one child(/parent) utterance per month.
         months_ok = []
         entries_ok = []
         for month in months:
-            if not valid(r, query, compare_total, month, comp_idx=2):  # >1 utterance?
+            if not valid(r, query, compare_adult, month, comp_idx=1):  # >1 utterance?
                 continue
             months_ok.append(month)
-            chi = r[month][0] / r[month][2]
-            if not compare_total:
-                if not valid(r, query, compare_total, month, comp_idx=1):  # >1 adult utterance?
+            chi = r[month][0] / r[month][1]
+            if compare_adult:
+                if not valid(r, query, compare_adult, month, comp_idx=3):  # >1 adult utterance?
                     months_ok = months_ok[:-1]
                     continue
-                chi = chi / (r[month][1] / r[month][2])
+                chi = chi / (r[month][2] / r[month][3])
             entries_ok.append(chi)
 
         plot, = plt.plot(months_ok, entries_ok, color=col, label=query)
         plots.append(plot)
-        i += 1
 
     plt.grid()
     xticks = np.arange(min_month, max_month + 1, step=3).tolist()
@@ -65,10 +70,10 @@ def visualize(results, compare_total, display=True, filename=None):
 
     ax.set_xticks(xticks)
     ax.set_xticklabels(xtick_labels)
-    if compare_total:
-        ylabel = 'Occurrences per utterance'
-    else:
+    if compare_adult:
         ylabel = 'Occurrences per adult utterance'
+    else:
+        ylabel = 'Occurrences per utterance'
     ax.set(xlabel='Age in months',
            ylabel=ylabel,
            title='')

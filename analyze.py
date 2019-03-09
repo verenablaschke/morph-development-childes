@@ -11,7 +11,7 @@ AGE_ERROR_MSG = 'Age is None. Skipping file'
 
 
 def count_occurrences(corpus, matcher, results, verbose=True):
-    age = corpus.age(month=True)[0]
+    age = corpus.age(month=True)[0]  # age in months
     if verbose:
         print(matcher)
         print(corpus.fileids(), age)
@@ -19,43 +19,55 @@ def count_occurrences(corpus, matcher, results, verbose=True):
         print(AGE_ERROR_MSG)
         sys.stderr.write('{}(s) {}.\n'.format(AGE_ERROR_MSG, corpus.fileids()))
         return results
-    n_sents = 0
-    n_occ = 0
+
+    n_utt_chi = 0  # number of utterances by the child
+    n_occ_chi = 0  # number of occurrences of the feature in the child's speech
     for sent in corpus.tagged_morph_sents(speaker='CHI',
-                                          strip_space=True,
+                                          strip_space=True
                                           ):
-        n_sents += 1
+        n_utt_chi += 1
         for entry in sent:
             if matcher.match(entry):
-                n_occ += 1
+                n_occ_chi += 1
                 if verbose:
-                    print(sent)
-    n_adult = 0
-    for sent in corpus.tagged_morph_sents(speaker=['MOT', 'FAT', 'INV'],
-                                          strip_space=True,
+                    print('CHI:', sent)
+
+    n_utt_par = 0  # number of utterances by the parent(s)
+    n_occ_par = 0  # number of occurrences of the feature in the parent's speech
+    for sent in corpus.tagged_morph_sents(speaker=['MOT', 'FAT'],
+                                          strip_space=True
                                           ):
+        n_utt_par += 1
         for entry in sent:
             if matcher.match(entry):
-                n_adult += 1
+                n_occ_par += 1
                 if verbose:
                     print('ADULT:', sent)
-    if n_sents > 0:  # TODO smooth?
+
+    # Add the numbers of utterances/occurrences to the results dictionary.
+    if n_utt_chi > 0:  # TODO smooth?
         matcher_str = matcher.__str__()
-        try:
+        try:  # Try to update an existing entry.
             prev_counts = results[matcher_str][age]
             results[matcher_str][age] = \
-                [sum(x) for x in zip(prev_counts, (n_occ, n_adult, n_sents))]
-        except KeyError:
+                [sum(x) for x in zip(prev_counts,
+                                     (n_occ_chi, n_utt_chi,
+                                      n_occ_par, n_utt_par))]
+        except KeyError:  # New entry for results[matcher_str][age].
             try:
-                results[matcher_str][age] = [n_occ, n_adult, n_sents]
-            except KeyError:
+                results[matcher_str][age] = [n_occ_chi, n_utt_chi,
+                                             n_occ_par, n_utt_par]
+            except KeyError:  # New entry for results[matcher_str].
                 results[matcher_str] = \
-                    {age: [n_occ, n_adult, n_sents]}
+                    {age: [n_occ_chi, n_utt_chi, n_occ_par, n_utt_par]}
 
     if verbose:
-        print(n_occ, n_adult, n_sents,
-              n_occ / n_sents if n_sents > 0 else -1,
-              n_occ / n_adult if n_adult > 0 else -1)
+        print('CHI: {} occurrences | {} utterances | ratio: {}'
+              .format(n_occ_chi, n_utt_chi, n_occ_chi / n_utt_chi
+                      if n_utt_chi > 0 else -1))
+        print('PAR: {} occurrences | {} utterances | ratio: {}'
+              .format(n_occ_par, n_utt_par, n_occ_par / n_utt_par
+                      if n_utt_par > 0 else -1))
         print()
     return results
 
@@ -74,8 +86,8 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('infl_suffix_expl', infl='3S', suffix='s')  # 10. 3.SG -s
             ]
 
-# results:
-# {query -> {age -> [n_occ, n_sent]}}
+# Results:
+# {query -> {age -> [n_occ_chi, n_utt_chi, n_occ_par, n_utt_par]}}
 results = {}
 for f in glob.glob('data/*/*/*.xml'):
     f = f.replace('\\', '/')[5:]
@@ -84,5 +96,5 @@ for f in glob.glob('data/*/*/*.xml'):
                                     matcher,
                                     results)
 
-visualize(results, compare_total=True, filename='output/total.png')
-visualize(results, compare_total=False, filename='output/adult.png')
+visualize(results, compare_adult=False, filename='output/total.png')
+visualize(results, compare_adult=True, filename='output/adult.png')
