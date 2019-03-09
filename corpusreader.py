@@ -91,16 +91,15 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
                 if speaker == 'ALL' or xmlsent.get('who') in speaker:
                     for xmlword in xmlsent.findall('.//{%s}w' % NS):
 
-
-                        # VB DELETE
+                        # VB: Added the following two 'if' blocks.
+                        # VB: If a word is a replacement, update the previous
+                        # entry with the replacement info, but do not add the
+                        # current word as an entry.
                         if skip:
                             skip = False
                             sents[-1][-1] = xmlword.text
-                            print('->', xmlword.text)
                             continue
-                        print(xmlword.text)
                         if xmlword.find('.//{%s}replacement' % NS):
-                            print('REPLACEMENT')
                             skip = True
 
                         infl = None

@@ -73,13 +73,14 @@ def visualize(results, compare_adult,
         plot, = plt.plot(months_ok, entries_ok, color=col, label=query)
         plots.append(plot)
 
+    # Prepare the grid and mark full years.
     plt.grid()
     xticks = np.arange(min_month, max_month + 1, step=3).tolist()
     xtick_labels = copy.deepcopy(xticks)
     for y in range(2, 6):
-        plt.axvline(x=y * 12)
-        xticks.append(y * 12)
-        xtick_labels[-1] = '{} yrs'.format(y)
+        plt.axvline(x=y * 12, color='k')
+        xticks = [y * 12] + xticks
+        xtick_labels = ['{} yrs'.format(y)] + xtick_labels
 
     ax.set_xticks(xticks)
     ax.set_xticklabels(xtick_labels)
@@ -92,6 +93,8 @@ def visualize(results, compare_adult,
            title='')
     plt.legend(handles=plots, loc=2)
     if filename is not None:
-        plt.savefig(filename, bbox_inches='tight', dpi=400)
+        fig = plt.gcf()
+        fig.set_size_inches(18.5, 10.5)
+        fig.savefig(filename, bbox_inches='tight', dpi=400)
     if display:
         plt.show()
