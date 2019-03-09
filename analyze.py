@@ -76,7 +76,7 @@ def count_occurrences(corpus, matcher, results, verbose=True):
 matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('form', form='in'),                          # 2./3. in
             Matcher('form', form='on'),                          # 2./3. on
-            Matcher('infl_suffix_expl', infl='PL', suffix='s'),  # 4. PL -s
+            Matcher('infl_suffix_expl', infl='PL', suffix='s'),  # 4. regular PL
             Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
             # TODO fix POSS query
             Matcher('infl_suffix_expl', infl='POSS', suffix='\'s'),  # 6. POSS
@@ -84,8 +84,8 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('form', form='the'),                         # 8. the, a
             Matcher('form', form='a'),                           # 8. the, a
             Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST
-            Matcher('infl_suffix_expl', infl='3S', suffix='s')  # 10. 3.SG -s
-            # 11. irregular 3.SG
+            Matcher('infl_suffix_expl', infl='3S', suffix='s'),  # 10. regular 3.SG
+            Matcher('3sg_irregular', infl='3S'),  # 11. irregular 3.SG
             # 12. uncontractible AUX
             # 13. contractible COP
             # 14. contractible AUX
