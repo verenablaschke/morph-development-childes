@@ -10,6 +10,22 @@ DATA_PATH = 'data'
 AGE_ERROR_MSG = 'Age is None. Skipping file'
 
 
+def analyze_sentence(speaker, matcher, sent, verbose):
+    occ = 0
+    if isinstance(matcher, SentenceMatcher):
+        if matcher.match(sent):
+            occ += 1
+            if verbose:
+                print(speaker, ':', sent)
+    else:
+        for entry in sent:
+            if matcher.match(entry):
+                occ += 1
+                if verbose:
+                    print(speaker, ':', sent)
+    return occ
+
+
 def count_occurrences(corpus, matcher, results, verbose=True):
     age = corpus.age(month=True)[0]  # age in months
     if verbose:
@@ -25,19 +41,8 @@ def count_occurrences(corpus, matcher, results, verbose=True):
     for sent in corpus.tagged_morph_sents(speaker='CHI',
                                           strip_space=True
                                           ):
-        # print(sent)  # TODO del
         n_utt_chi += 1
-        if isinstance(matcher, SentenceMatcher):
-            if matcher.match(sent):
-                n_occ_chi += 1
-                if verbose:
-                    print('CHI:', sent)
-        else:
-            for entry in sent:
-                if matcher.match(entry):
-                    n_occ_chi += 1
-                    if verbose:
-                        print('CHI:', sent)
+        n_occ_chi += analyze_sentence('CHI', matcher, sent, verbose)
 
     n_utt_par = 0  # number of utterances by the parent(s)
     n_occ_par = 0  # number of occurrences of the feature in the parent's speech
@@ -45,11 +50,7 @@ def count_occurrences(corpus, matcher, results, verbose=True):
                                           strip_space=True
                                           ):
         n_utt_par += 1
-        for entry in sent:
-            if matcher.match(entry):
-                n_occ_par += 1
-                if verbose:
-                    print('ADULT:', sent)
+        n_occ_par += analyze_sentence('PAR', matcher, sent, verbose)
 
     # Add the numbers of utterances/occurrences to the results dictionary.
     if n_utt_chi > 0:  # TODO smooth?
