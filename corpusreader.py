@@ -26,7 +26,7 @@
 from nltk.corpus.reader import CHILDESCorpusReader
 from nltk.corpus.reader.xmldocs import ElementTree
 from nltk.util import LazyMap, LazyConcatenation
-
+from word import Word  # Import from this repository.
 
 # From nltk.corpus.reader.childes:
 # to resolve the namespace issue
@@ -55,27 +55,26 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
                 researchers)
             :param strip_space: If true, then strip trailing spaces from word
                 tokens. Otherwise, leave the spaces on the tokens.
-            :rtype: list(list(tuple(str,str,str,str,str)))
+            :rtype: list(list(Word))
             """
-            sent = True
-            pos = True
+            # VB: Removed 'sent = True', 'pos = True'
             if not self._lazy:
                 return [
                     self._get_morph_words(  # VB: Changed method from _get_words.
-                        fileid, speaker, sent, pos, strip_space
+                        fileid, speaker, strip_space
                     )
                     for fileid in self.abspaths(fileids)
                 ]
 
             get_words = lambda fileid: self._get_morph_words(  # VB: Changed method from _get_words.
-                fileid, speaker, sent, pos, strip_space
+                fileid, speaker, strip_space
             )
             return LazyConcatenation(LazyMap(get_words, self.abspaths(fileids)))
 
 
     # NLTK's _get_words method.
     def _get_morph_words(
-            self, fileid, speaker, sent, pos, strip_space  # VB: Removed stem/relation/replace keywords.
+            self, fileid, speaker, strip_space  # VB: Removed stem/sent/pos/relation/replace keywords.
         ):
             if (
                 isinstance(speaker, str) and speaker != 'ALL'  # VB: Changed six.string_types to str.
@@ -97,7 +96,9 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
                         # current word as an entry.
                         if skip:
                             skip = False
-                            sents[-1][-1] = xmlword.text
+                            entry = sents[-1]
+                            entry.replacement = xmlword.text
+                            sents[-1] = entry
                             continue
                         if xmlword.find('.//{%s}replacement' % NS):
                             skip = True
@@ -147,40 +148,56 @@ class CHILDESMorphFileReader(CHILDESCorpusReader):
                         if suffixStem:
                             word += "~" + suffixStem
                         # pos
-                        if pos:  # VB: Originally 'if relation or pos:'.
-                            try:
-                                xmlpos = xmlword.findall(".//{%s}c" % NS)
-                                xmlpos2 = xmlword.findall(".//{%s}s" % NS)
-                                if xmlpos2 != []:
-                                    tag = xmlpos[0].text + ":" + xmlpos2[0].text
-                                else:
-                                    tag = xmlpos[0].text
-                            except (AttributeError, IndexError) as e:
-                                tag = ""
-                            try:
-                                xmlsuffixpos = xmlword.findall(
-                                    './/{%s}mor/{%s}mor-post/{%s}mw/{%s}pos/{%s}c'
-                                    % (NS, NS, NS, NS, NS)
+                        # Removed 'if relation or pos:' check that encloses the code up until the 'relational' comment
+                        try:
+                            xmlpos = xmlword.findall(".//{%s}c" % NS)
+                            xmlpos2 = xmlword.findall(".//{%s}s" % NS)
+                            if xmlpos2 != []:
+                                tag = xmlpos[0].text + ":" + xmlpos2[0].text
+                            else:
+                                tag = xmlpos[0].text
+                        except (AttributeError, IndexError) as e:
+                            tag = ""
+                        try:
+                            xmlsuffixpos = xmlword.findall(
+                                './/{%s}mor/{%s}mor-post/{%s}mw/{%s}pos/{%s}c'
+                                % (NS, NS, NS, NS, NS)
+                            )
+                            xmlsuffixpos2 = xmlword.findall(
+                                './/{%s}mor/{%s}mor-post/{%s}mw/{%s}pos/{%s}s'
+                                % (NS, NS, NS, NS, NS)
+                            )
+                            if xmlsuffixpos2:
+                                suffixTag = (
+                                    xmlsuffixpos[0].text + ":" + xmlsuffixpos2[0].text
                                 )
-                                xmlsuffixpos2 = xmlword.findall(
-                                    './/{%s}mor/{%s}mor-post/{%s}mw/{%s}pos/{%s}s'
-                                    % (NS, NS, NS, NS, NS)
-                                )
-                                if xmlsuffixpos2:
-                                    suffixTag = (
-                                        xmlsuffixpos[0].text + ":" + xmlsuffixpos2[0].text
-                                    )
-                                else:
-                                    suffixTag = xmlsuffixpos[0].text
-                            except:
-                                pass
-                            if suffixTag:
-                                tag += "~" + suffixTag
-                            word = [word, tag, stem, infl, infl_type, '']  # VB: Added stem, infl, infl_type and an empty string for replacements. Changed from tuple to list.
-                        # VB: Removed 'if relation == True:' block.                        
+                            else:
+                                suffixTag = xmlsuffixpos[0].text
+                        except:
+                            pass
+                        if suffixTag:
+                            tag += "~" + suffixTag
+                        word = Word(word, tag, stem, infl, infl_type)  # VB: Originally 'word = [word, tag]'
+                        # relational
+                        # the gold standard is stored in
+                        # <mor></mor><mor type="trn"><gra type="grt">
+                        # VB: Removed 'if relation == True:' block.
+                        for xmlstem_rel in xmlword.findall(  # VB: From the original 'if relation == True:' block
+                            './/{%s}mor/{%s}gra' % (NS, NS)
+                        ):
+                            word.rel = xmlstem_rel.get('relation')  # VB: Added.
+                        try:
+                            for xmlpost_rel in xmlword.findall(  # VB: From the original 'if relation == True:' block
+                                './/{%s}mor/{%s}mor-post/{%s}gra' % (NS, NS, NS)
+                            ):
+                                word.post_rel = xmlpost_rel.get('relation')  # VB: Added.
+                        except:
+                            pass
                         sents.append(word)
-                    if sent or relation:
-                        results.append(sents)
-                    else:
-                        results.extend(sents)
+                    # VB: Replaced the sent/relation check:
+                    # if sent or relation:
+                    #     results.append(sents)
+                    # else:
+                    #     results.extend(sents)
+                    results.append(sents)
             return LazyMap(lambda x: x, results)

@@ -25,6 +25,7 @@ def count_occurrences(corpus, matcher, results, verbose=True):
     for sent in corpus.tagged_morph_sents(speaker='CHI',
                                           strip_space=True
                                           ):
+        print(sent)  # TODO del
         n_utt_chi += 1
         for entry in sent:
             if matcher.match(entry):
@@ -78,12 +79,12 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('infl_suffix_expl', infl='PL', suffix='s'),  # 4. PL -s
             Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
             # TODO fix POSS query
-            # Matcher('infl_suffix_expl', infl='POSS', suffix='\'s'),  # 6. POSS
+            Matcher('infl_suffix_expl', infl='POSS', suffix='\'s'),  # 6. POSS
             # TODO: 7. uncontractable COP  -> only verb in sentence, maybe can also be determined via dependency info?
-            Matcher('form', form='the'),                         # 8. the, a
-            Matcher('form', form='a'),                           # 8. the, a
-            Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST
-            Matcher('infl_suffix_expl', infl='3S', suffix='s')  # 10. 3.SG -s
+            # Matcher('form', form='the'),                         # 8. the, a
+            # Matcher('form', form='a'),                           # 8. the, a
+            # Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST
+            # Matcher('infl_suffix_expl', infl='3S', suffix='s')  # 10. 3.SG -s
             # 11. irregular 3.SG
             # 12. uncontractible AUX
             # 13. contractible COP
@@ -93,12 +94,13 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
 # Results:
 # {query -> {age -> [n_occ_chi, n_utt_chi, n_occ_par, n_utt_par]}}
 results = {}
-for f in glob.glob('data/*/*/*.xml'):
+# for f in glob.glob('data/*/*/*.xml'):
+for f in glob.glob('data/test.xml'):
     f = f.replace('\\', '/')[5:]
     for matcher in matchers:
         results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
                                     matcher,
                                     results)
 
-visualize(results, compare_adult=False, filename='output/total.png')
-visualize(results, compare_adult=True, filename='output/adult.png')
+# visualize(results, compare_adult=False, filename='output/total.png')
+# visualize(results, compare_adult=True, filename='output/adult.png')

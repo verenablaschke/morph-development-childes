@@ -12,15 +12,15 @@ class Matcher:
         return getattr(self, 'match_' + self.condition)(entry)
 
     def match_form(self, entry):
-        return entry[0] == self.form
+        return entry.form == self.form
 
     def match_suffix(self, entry):
-        return entry[0].endswith(self.suffix)
+        return entry.form.endswith(self.suffix)
 
     # https://talkbank.org/manuals/MOR.html#Mor_Markers_Suffix
     def match_infl(self, entry, infl_type=None):
-        return entry[3] == self.infl \
-            and (infl_type is None or entry[4] == infl_type)
+        return entry.infl == self.infl \
+            and (infl_type is None or entry.infl_type == infl_type)
 
     # Morphologically/phonologically distinct inflectional affix.
     # https://talkbank.org/manuals/MOR.html#Mor_Markers_Suffix

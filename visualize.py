@@ -94,7 +94,7 @@ def visualize(results, compare_adult,
     plt.legend(handles=plots, loc=2)
     if filename is not None:
         fig = plt.gcf()
-        fig.set_size_inches(18.5, 10.5)
+        fig.set_size_inches(18, 9)
         fig.savefig(filename, bbox_inches='tight', dpi=400)
     if display:
         plt.show()
