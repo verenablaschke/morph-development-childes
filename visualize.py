@@ -2,9 +2,16 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
+# from enum import Enum
 
 
 EMPTY_MONTH_MSG = 'No {}entries for month {}, query={}.'
+
+
+# class Person(Enum):
+#     CHI = 0
+#     PARENT = 1
+#     BOTH = 2
 
 
 def valid(r, query, compare_adult, month, comp_idx):
@@ -46,16 +53,22 @@ def visualize(results, compare_adult,
         months_ok = []
         entries_ok = []
         for month in months:
-            if not valid(r, query, compare_adult, month, comp_idx=1):  # >1 utterance?
+            if not valid(r, query, compare_adult, month, comp_idx=0):  # >1 utterance?
                 continue
             months_ok.append(month)
+            if verbose:
+                print('month:', month, 'entries:', r[month])
             chi = r[month][0] / r[month][1]
             if compare_adult:
-                if not valid(r, query, compare_adult, month, comp_idx=3):  # >1 adult utterance?
+                if not valid(r, query, compare_adult, month, comp_idx=2):  # >1 adult utterance?
                     months_ok = months_ok[:-1]
                     continue
                 chi = chi / (r[month][2] / r[month][3])
             entries_ok.append(chi)
+
+        if verbose:
+            print('months_ok', months_ok)
+            print('entries_ok', entries_ok)
 
         plot, = plt.plot(months_ok, entries_ok, color=col, label=query)
         plots.append(plot)
@@ -64,7 +77,7 @@ def visualize(results, compare_adult,
     xticks = np.arange(min_month, max_month + 1, step=3).tolist()
     xtick_labels = copy.deepcopy(xticks)
     for y in range(2, 6):
-        plt.axvline(x=y * 12, color='r')
+        plt.axvline(x=y * 12)
         xticks.append(y * 12)
         xtick_labels[-1] = '{} yrs'.format(y)
 
@@ -79,6 +92,6 @@ def visualize(results, compare_adult,
            title='')
     plt.legend(handles=plots, loc=2)
     if filename is not None:
-        plt.savefig(filename, bbox_inches='tight')
+        plt.savefig(filename, bbox_inches='tight', dpi=400)
     if display:
         plt.show()
