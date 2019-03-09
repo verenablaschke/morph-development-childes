@@ -30,13 +30,18 @@ class Matcher:
     # Inflectional morpheme(s) that is (are) fused with the stem.
     # https://talkbank.org/manuals/MOR.html#Mor_Markers_Suffix_Fusional
     def match_infl_fusion(self, entry):
-        return self.match_infl(entry, infl_type='sfxf')
+        return self.match_infl(entry, infl_type='sfxf') \
+            and entry.replacement == ''
 
     def match_infl_suffix_expl(self, entry):
         return self.match_suffix(entry) and self.match_infl_affix(entry)
 
     def match_copula_uncontractible(self, entry):
-        return entry.tag == 'cop' and entry.rel in ['ROOT', 'COMP']
+        return entry.tag == 'cop' and entry.rel in ['ROOT', 'COMP'] \
+            and entry.replacement == ''
+
+    def match_3sg_irregular(self, entry):
+        return entry.tag == 'v' and self.match_infl_fusion(entry)
 
     def __str__(self):
         return 'Matcher({}, form={}, infl={}, suffix={})' \
