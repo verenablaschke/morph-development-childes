@@ -1,12 +1,14 @@
 class Matcher:
 
-    __slots__ = ['condition', 'form', 'infl', 'suffix']
+    __slots__ = ['condition', 'form', 'infl', 'suffix', 'post_rel']
 
-    def __init__(self, condition, form=None, infl=None, suffix=None):
+    def __init__(self, condition,
+                 form=None, infl=None, suffix=None, post_rel=None):
         self.condition = condition
         self.form = form
         self.infl = infl
         self.suffix = suffix
+        self.post_rel = post_rel
 
     def match(self, entry):
         return getattr(self, 'match_' + self.condition)(entry)
@@ -15,7 +17,12 @@ class Matcher:
         return entry.form == self.form
 
     def match_suffix(self, entry):
-        return entry.form.endswith(self.suffix)
+        if isinstance(self.suffix, str):
+            return entry.form.endswith(self.suffix)
+        for sfx in self.suffix:
+            if entry.form.endswith(sfx):
+                return True
+        return False
 
     # https://talkbank.org/manuals/MOR.html#Mor_Markers_Suffix
     def match_infl(self, entry, infl_type=None):
@@ -42,6 +49,12 @@ class Matcher:
 
     def match_3sg_irregular(self, entry):
         return entry.tag == 'v' and self.match_infl_fusion(entry)
+
+    def match_postrel(self, entry):
+        return entry.post_rel == self.post_rel
+
+    def match_suffix_postrel(self, entry):
+        return self.match_suffix(entry) and self.match_postrel(entry)
 
     def __str__(self):
         return 'Matcher({}, form={}, infl={}, suffix={})' \

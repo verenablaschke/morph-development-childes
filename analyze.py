@@ -86,7 +86,7 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('infl_suffix_expl', infl='PL', suffix='s'),  # 4. regular PL
             Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
             # TODO fix POSS query
-            Matcher('infl_suffix_expl', infl='POSS', suffix='\'s'),  # 6. POSS
+            Matcher('suffix_postrel', post_rel='POSS', suffix=['\'s', 's\'']),  # 6. POSS
             SentenceMatcher(Matcher('copula_uncontractible'), 'copula_uncontractible'),  # 7. uncontractible COP
             Matcher('form', form='the'),                         # 8. the, a
             Matcher('form', form='a'),                           # 8. the, a
