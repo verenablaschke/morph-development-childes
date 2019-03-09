@@ -35,6 +35,9 @@ class Matcher:
     def match_infl_suffix_expl(self, entry):
         return self.match_suffix(entry) and self.match_infl_affix(entry)
 
+    def match_copula_uncontractible(self, entry):
+        return entry.tag == 'cop' and entry.rel in ['ROOT', 'COMP']
+
     def __str__(self):
         return 'Matcher({}, form={}, infl={}, suffix={})' \
                .format(self.condition, self.form, self.infl, self.suffix)
