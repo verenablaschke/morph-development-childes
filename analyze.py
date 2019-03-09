@@ -2,7 +2,7 @@ import glob
 import sys
 # Imports from other files in this directory:
 from corpusreader import CHILDESMorphFileReader
-from match import Matcher
+from match import Matcher, SentenceMatcher
 from visualize import visualize
 
 
@@ -27,11 +27,17 @@ def count_occurrences(corpus, matcher, results, verbose=True):
                                           ):
         # print(sent)  # TODO del
         n_utt_chi += 1
-        for entry in sent:
-            if matcher.match(entry):
+        if isinstance(matcher, SentenceMatcher):
+            if matcher.match(sent):
                 n_occ_chi += 1
                 if verbose:
                     print('CHI:', sent)
+        else:
+            for entry in sent:
+                if matcher.match(entry):
+                    n_occ_chi += 1
+                    if verbose:
+                        print('CHI:', sent)
 
     n_utt_par = 0  # number of utterances by the parent(s)
     n_occ_par = 0  # number of occurrences of the feature in the parent's speech
@@ -80,7 +86,7 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
             # TODO fix POSS query
             Matcher('infl_suffix_expl', infl='POSS', suffix='\'s'),  # 6. POSS
-            Matcher('copula_uncontractible'),  # 7. uncontractible COP
+            SentenceMatcher(Matcher('copula_uncontractible'), 'copula_uncontractible'),  # 7. uncontractible COP
             Matcher('form', form='the'),                         # 8. the, a
             Matcher('form', form='a'),                           # 8. the, a
             Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST

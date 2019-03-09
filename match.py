@@ -46,3 +46,49 @@ class Matcher:
     def __str__(self):
         return 'Matcher({}, form={}, infl={}, suffix={})' \
                .format(self.condition, self.form, self.infl, self.suffix)
+
+
+class SentenceMatcher:
+
+    __slots__ = ['matcher', 'condition']
+
+    def __init__(self, matcher, condition):
+        self.matcher = matcher
+        self.condition = condition
+
+    def match(self, sent):
+        return getattr(self, 'match_' + self.condition)(sent)
+
+    def match_copula_uncontractible(self, sent):
+        match = -1
+        for i, entry in enumerate(sent):
+            if self.matcher.match(entry):
+                match = i
+                break
+
+        # No uncontracted copula.
+        if match == - 1:
+            return False
+
+        # Sentence-initial/final copula.
+        sent_last = len(sent) - 1
+        if match == 0 or match == sent_last \
+           or (match == sent_last - 1 and sent[-1].tag == 'PUNCT'):
+            return True
+
+        subj_pos = -1
+        for i, entry in enumerate(sent):
+            if entry.tag == 'SUBJ':
+                subj_pos = i
+                break
+
+        # No subject; sentence is probably ungrammatical.
+        if subj_pos == -1:
+            return False
+
+        # Probably a question with inversion.
+        return match < subj_pos and sent[-1].form == '?'
+
+    def __str__(self):
+        return 'SentenceMatcher({}, {})' \
+               .format(self.matcher, self.condition)
