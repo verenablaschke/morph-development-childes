@@ -16,8 +16,8 @@ EMPTY_MONTH_MSG = 'No {}entries for month {}, query={}.'
 
 def valid(r, query, compare_adult, month, comp_idx):
     if r[month][comp_idx] is None or r[month][comp_idx] <= 0:
-        msg = EMPTY_MONTH_MSG.format('adult ', month, query if compare_adult
-                                     else '')
+        msg = EMPTY_MONTH_MSG.format('adult ' if compare_adult
+                                     else '', month, query)
         print(msg)
         sys.stderr.write(msg + '\n')
         return False
@@ -53,14 +53,14 @@ def visualize(results, compare_adult,
         months_ok = []
         entries_ok = []
         for month in months:
-            if not valid(r, query, compare_adult, month, comp_idx=0):  # >1 utterance?
+            if not valid(r, query, compare_adult, month, comp_idx=0):  # >=1 utterance?
                 continue
             months_ok.append(month)
             if verbose:
                 print('month:', month, 'entries:', r[month])
             chi = r[month][0] / r[month][1]
             if compare_adult:
-                if not valid(r, query, compare_adult, month, comp_idx=2):  # >1 adult utterance?
+                if not valid(r, query, compare_adult, month, comp_idx=2):  # >=1 adult utterance?
                     months_ok = months_ok[:-1]
                     continue
                 chi = chi / (r[month][2] / r[month][3])
@@ -79,8 +79,11 @@ def visualize(results, compare_adult,
     xtick_labels = copy.deepcopy(xticks)
     for y in range(2, 6):
         plt.axvline(x=y * 12, color='k')
-        xticks = [y * 12] + xticks
-        xtick_labels = ['{} yrs'.format(y)] + xtick_labels
+        try:
+            xtick_labels[xticks.index(y * 12)] = '{} yrs'.format(y)
+        except ValueError:
+            xticks.append(y * 12)
+            xtick_labels.append('{} yrs'.format(y))
 
     ax.set_xticks(xticks)
     ax.set_xticklabels(xtick_labels)

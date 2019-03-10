@@ -55,8 +55,8 @@ def count_occurrences(corpus, matcher, results, verbose=True):
         n_occ_par += analyze_sentence('PAR', matcher, sent, verbose)
 
     # Add the numbers of utterances/occurrences to the results dictionary.
-    if n_utt_chi > 0:  # TODO smooth?
-        matcher_str = matcher.__str__()
+    if n_utt_chi > 50:  # TODO smooth?
+        matcher_str = matcher.label
         try:  # Try to update an existing entry.
             prev_counts = results[matcher_str][age]
             results[matcher_str][age] = \
@@ -82,35 +82,40 @@ def count_occurrences(corpus, matcher, results, verbose=True):
     return results
 
 
-matchers = [Matcher(infl='PRESP'),                       # 1. -ing
-            Matcher(form='in'),                          # 2./3. in
-            Matcher(form='on'),                          # 2./3. on
-            Matcher(infl_affix='PL', suffix='s'),  # 4. regular PL
-            Matcher(infl_fusion='PAST'),                 # 5. irregular PAST
-            Matcher(post_rel='POSS', suffix=['\'s', 's\'']),  # 6. POSS -'s/-s'
-            SentenceMatcher(Matcher(tag='cop', stem='be', rel=['ROOT', 'COMP', 'INCROOT']), 'uncontractible'),  # 7. uncontractible COP
-            Matcher(form=['the', 'a', 'an']),                  # 8. the, a
-            Matcher(infl_affix='PAST', suffix='ed'),  # 9. regular PAST
-            Matcher(infl_affix='3S', suffix='s'),  # 10. regular 3.SG
-            Matcher(tag='v', infl_fusion='3S'),  # 11. irregular 3.SG
-            SentenceMatcher(Matcher(tag='aux', stem='be'), 'uncontractible'),  # 12. uncontractible AUX
-            Matcher(sfx_tag='cop', sfx='be', post_rel=['ROOT', 'COMP', 'INCROOT']),  # 13. contractible COP
-            Matcher(sfx_tag='aux', sfx='be', post_rel='AUX')  # 14. contractible AUX
+matchers = [Matcher('1. present participle', infl='PRESP'),
+            Matcher('2./3. in', form='in'),
+            Matcher('2./3. out', form='on'),
+            Matcher('4. plural (regular)', infl_affix='PL', suffix='s'),
+            Matcher('5. simple past (irregular)', infl_fusion='PAST'),
+            Matcher('6. possessive -\'s/-s\'', post_rel='POSS',
+                    suffix=['\'s', 's\'']),
+            SentenceMatcher(Matcher('7. copula \'be\' (uncontractible)',
+                                    tag='cop', stem='be',
+                                    rel=['ROOT', 'COMP', 'INCROOT']),
+                            'uncontractible'),
+            Matcher('8. articles', form=['the', 'a', 'an']),
+            Matcher('9. simple past (regular)', infl_affix='PAST',
+                    suffix='ed'),
+            Matcher('10. 3.SG.PRES (regular)', infl_affix='3S', suffix='s'),
+            Matcher('11. 3.SG.PRES (irregular)', tag='v', infl_fusion='3S'),
+            SentenceMatcher(Matcher('12. auxiliary \'be\' (uncontractible)',
+                                    tag='aux', stem='be'),
+                            'uncontractible'),
+            Matcher('13. copula \'be\' (contractible)', sfx_tag='cop',
+                    sfx='be', post_rel=['ROOT', 'COMP', 'INCROOT']),
+            Matcher('14. auxiliary \'be\' (contractible)', sfx_tag='aux',
+                    sfx='be', post_rel='AUX')
             ]
 
 # Results:
 # {query -> {age -> [n_occ_chi, n_utt_chi, n_occ_par, n_utt_par]}}
 results = {}
-# for f in glob.glob('data/*/*/*.xml'):
-# for f in glob.glob('data/Brown/Adam/*.xml'):
-for f in glob.glob('data/test.xml'):
+for f in glob.glob('data/*/*/*.xml'):
     f = f.replace('\\', '/')[5:]
     for matcher in matchers:
         results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
                                     matcher,
                                     results)
 
-visualize(results, compare_adult=False)
-visualize(results, compare_adult=True)
-# visualize(results, compare_adult=False, filename='output/total.png')
-# visualize(results, compare_adult=True, filename='output/adult.png')
+visualize(results, compare_adult=False, filename='output/total.png')
+visualize(results, compare_adult=True, filename='output/adult.png')

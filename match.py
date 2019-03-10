@@ -1,13 +1,14 @@
 class Matcher:
 
-    __slots__ = ['form', 'infl', 'infl_affix', 'infl_fusion',
+    __slots__ = ['label', 'form', 'infl', 'infl_affix', 'infl_fusion',
                  'suffix', 'rel', 'post_rel', 'sfx', 'sfx_tag',
                  'tag', 'stem']
 
-    def __init__(self,
+    def __init__(self, label,
                  form=None, infl=None, infl_affix=None, infl_fusion=None,
                  suffix=None, rel=None, sfx=None, sfx_tag=None,
                  post_rel=None, tag=None, stem=None):
+        self.label = label
         self.form = form
         self.infl = infl
         self.infl_affix = infl_affix
@@ -99,11 +100,12 @@ class Matcher:
 
 class SentenceMatcher:
 
-    __slots__ = ['matcher', 'condition']
+    __slots__ = ['matcher', 'condition', 'label']
 
     def __init__(self, matcher, condition):
         self.matcher = matcher
         self.condition = condition
+        self.label = matcher.label
 
     def match(self, sent):
         return getattr(self, 'match_' + self.condition)(sent)
