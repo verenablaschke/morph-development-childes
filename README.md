@@ -2,7 +2,7 @@
 
 Project for the course [ENG-3040 First Language Acquisition](https://en.uit.no/education/courses/course?p_document_id=567082) at Universitetet i Tromsø, spring semester 2019.
 
-Order of acquisition of functional morphemes in English. Fourteen morphemes/categories presented by Brown (1973, pp. 254--274) (see also Owens (2015, pp. 274--286)):
+Order of acquisition of functional morphemes in English. Fourteen morphemes/categories presented by Brown (1973, pp. 254--274) (see also Owens (2012, pp. 274--286)):
 
 |       | feature                  |
 |-------|--------------------------|
@@ -39,4 +39,4 @@ Brown, Roger. _A first language: The early stages._ Harvard U. Press, 1973.
 
 O'Grady, William. _How children learn language._ Cambridge University Press, 2005.
 
-Owens Jr, Robert E. _Language development: An introduction._ 8th Edition. Pearson, 2015.
+Owens, Robert E. _Language development: An introduction._ 8th Edition. Pearson, 2012.

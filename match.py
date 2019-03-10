@@ -1,11 +1,11 @@
 class Matcher:
 
     __slots__ = ['condition', 'form', 'infl', 'suffix', 'rel', 'post_rel',
-                 'tag']
+                 'tag', 'stem']
 
     def __init__(self, condition,
                  form=None, infl=None, suffix=None, rel=None,
-                 post_rel=None, tag=None):
+                 post_rel=None, tag=None, stem=None):
         self.condition = condition
         self.form = form
         self.infl = infl
@@ -13,6 +13,10 @@ class Matcher:
         self.rel = rel
         self.post_rel = post_rel
         self.tag = tag
+        self.stem = stem
+
+    # TODO This system works but it could be simplified a lot by deducing the
+    # the 'condition' value from the instance variables that aren't None.
 
     def match(self, entry):
         return getattr(self, 'match_' + self.condition)(entry) \
@@ -61,8 +65,15 @@ class Matcher:
     def match_infl_suffix_expl(self, entry):
         return self.match_suffix(entry) and self.match_infl_affix(entry)
 
-    def match_tag_rel(self, entry):
-        return self.match_tag(entry) and self.match_rel(entry)
+    def match_tag_rel_stem(self, entry):
+        return self.match_tag(entry) and self.match_rel(entry) \
+            and self.match_stem(entry)
+
+    def match_tagorrel_stem(self, entry):
+        # Used for checking for uncontractible auxiliary 'be'.
+        # 'or' instead of 'and' because of tagging inconsistencies.
+        return (self.match_tag(entry) or self.match_rel(entry)) \
+            and self.match_stem(entry)
 
     def match_tag_infl_fusion(self, entry):
         return self.match_tag(entry) and self.match_infl_fusion(entry)
@@ -76,9 +87,17 @@ class Matcher:
     def match_tag(self, entry):
         return entry.tag == self.tag
 
+    def match_stem(self, entry):
+        return entry.stem == self.stem
+
     def __str__(self):
-        return 'Matcher({}, form={}, infl={}, suffix={})' \
-               .format(self.condition, self.form, self.infl, self.suffix)
+        msg = 'Matcher({}'.format(self.condition)
+        for attr in self.__slots__:
+            val = getattr(self, attr)
+            if val is None:
+                continue
+            msg += ', {}={}'.format(attr, val)
+        return msg + ')'
 
 
 class SentenceMatcher:
@@ -94,11 +113,8 @@ class SentenceMatcher:
 
     def match_uncontractible(self, sent):
         match = -1
-        aux_matcher = self.matcher.rel == 'AUX'
         for i, entry in enumerate(sent):
             if self.matcher.match(entry):
-                if aux_matcher and entry.stem == 'do':
-                    continue
                 if entry.sfx_tag == 'neg' or entry.infl == 'PAST':
                     return True
                 match = i
@@ -114,18 +130,8 @@ class SentenceMatcher:
            or (match == sent_last - 1 and sent[-1].tag == 'PUNCT'):
             return True
 
-        subj_pos = -1
-        for i, entry in enumerate(sent):
-            if entry.tag == 'SUBJ':
-                subj_pos = i
-                break
-
-        # No subject; sentence is probably ungrammatical.
-        if subj_pos == -1:
-            return False
-
-        # Probably a question with inversion.
-        return match < subj_pos and sent[-1].form == '?'
+        # We cannot easily determine whether it's (un)contractible.
+        return False
 
     def __str__(self):
         return 'SentenceMatcher({}, {})' \

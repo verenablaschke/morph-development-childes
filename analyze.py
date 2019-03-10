@@ -86,12 +86,12 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('infl_suffix_expl', infl='PL', suffix='s'),  # 4. regular PL
             Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
             Matcher('suffix_postrel', post_rel='POSS', suffix=['\'s', 's\'']),  # 6. POSS -'s/-s'
-            SentenceMatcher(Matcher('tag_rel', tag='cop', rel=['ROOT', 'COMP']), 'uncontractible'),  # 7. uncontractible COP
+            SentenceMatcher(Matcher('tag_rel_stem', tag='cop', stem='be', rel=['ROOT', 'COMP', 'INCROOT']), 'uncontractible'),  # 7. uncontractible COP
             Matcher('form', form=['the', 'a', 'an']),                  # 8. the, a
             Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST
             Matcher('infl_suffix_expl', infl='3S', suffix='s'),  # 10. regular 3.SG
             Matcher('tag_infl_fusion', tag='v', infl='3S'),  # 11. irregular 3.SG
-            SentenceMatcher(Matcher('tag_rel', tag='mod', rel='AUX'), 'uncontractible'),  # 12. uncontractible AUX
+            SentenceMatcher(Matcher('tagorrel_stem', tag='aux', rel='AUX', stem='be'), 'uncontractible'),  # 12. uncontractible AUX
             # 13. contractible COP
             # 14. contractible AUX
             ]
