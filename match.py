@@ -1,34 +1,59 @@
 class Matcher:
 
-    __slots__ = ['condition', 'form', 'infl', 'suffix', 'rel', 'post_rel',
+    __slots__ = ['form', 'infl', 'infl_affix', 'infl_fusion',
+                 'suffix', 'rel', 'post_rel', 'sfx', 'sfx_tag',
                  'tag', 'stem']
 
-    def __init__(self, condition,
-                 form=None, infl=None, suffix=None, rel=None,
+    def __init__(self,
+                 form=None, infl=None, infl_affix=None, infl_fusion=None,
+                 suffix=None, rel=None, sfx=None, sfx_tag=None,
                  post_rel=None, tag=None, stem=None):
-        self.condition = condition
         self.form = form
         self.infl = infl
+        self.infl_affix = infl_affix
+        self.infl_fusion = infl_fusion
         self.suffix = suffix
         self.rel = rel
         self.post_rel = post_rel
         self.tag = tag
         self.stem = stem
-
-    # TODO This system works but it could be simplified a lot by deducing the
-    # the 'condition' value from the instance variables that aren't None.
+        self.sfx = sfx
+        self.sfx_tag = sfx_tag
 
     def match(self, entry):
-        return getattr(self, 'match_' + self.condition)(entry) \
-            and entry.replacement == ''
+        if entry.replacement:
+            return False
+        for attr in self.__slots__:
+            if not getattr(self, attr):  # Value is None/False -> skip.
+                continue
+            try:
+                if not getattr(self, 'match_' + attr)(entry):
+                    return False
+            except AttributeError:
+                pass
+        return True
 
-    def match_form(self, entry):
-        if isinstance(self.form, str):
-            return entry.form == self.form
-        for f in self.form:
-            if entry.form == f:
+    def check_identity_or_in(self, entry, attr):
+        comp = getattr(self, attr)
+        entry_comp = getattr(entry, attr)
+        if isinstance(comp, str):
+            return comp == entry_comp
+        for elem in comp:
+            if elem == entry_comp:
                 return True
         return False
+
+    def match_form(self, entry):
+        return self.check_identity_or_in(entry, 'form')
+
+    def match_tag(self, entry):
+        return self.check_identity_or_in(entry, 'tag')
+
+    def match_sfx_tag(self, entry):
+        return self.check_identity_or_in(entry, 'sfx_tag')
+
+    def match_stem(self, entry):
+        return self.check_identity_or_in(entry, 'stem')
 
     def match_suffix(self, entry):
         if isinstance(self.suffix, str):
@@ -39,16 +64,22 @@ class Matcher:
         return False
 
     def match_rel(self, entry):
-        if isinstance(self.rel, str):
-            return entry.rel == self.rel
-        for r in self.rel:
-            if entry.rel == r:
-                return True
-        return False
+        return self.check_identity_or_in(entry, 'rel')
+
+    def match_postrel(self, entry):
+        return self.check_identity_or_in(entry, 'post_rel')
 
     # https://talkbank.org/manuals/MOR.html#Mor_Markers_Suffix
     def match_infl(self, entry, infl_type=None):
-        return entry.infl == self.infl \
+        infl_present = False
+        if self.infl:
+            infl_present = self.check_identity_or_in(entry, 'infl')
+        elif self.infl_affix:
+            infl_present = self.check_identity_or_in(entry, 'infl_affix')
+        elif self.infl_fusion:
+            infl_present = self.check_identity_or_in(entry, 'infl_fusion')
+
+        return infl_present \
             and (infl_type is None or entry.infl_type == infl_type)
 
     # Morphologically/phonologically distinct inflectional affix.
@@ -62,42 +93,14 @@ class Matcher:
         return self.match_infl(entry, infl_type='sfxf') \
             and entry.replacement == ''
 
-    def match_infl_suffix_expl(self, entry):
-        return self.match_suffix(entry) and self.match_infl_affix(entry)
-
-    def match_tag_rel_stem(self, entry):
-        return self.match_tag(entry) and self.match_rel(entry) \
-            and self.match_stem(entry)
-
-    def match_tagorrel_stem(self, entry):
-        # Used for checking for uncontractible auxiliary 'be'.
-        # 'or' instead of 'and' because of tagging inconsistencies.
-        return (self.match_tag(entry) or self.match_rel(entry)) \
-            and self.match_stem(entry)
-
-    def match_tag_infl_fusion(self, entry):
-        return self.match_tag(entry) and self.match_infl_fusion(entry)
-
-    def match_postrel(self, entry):
-        return entry.post_rel == self.post_rel
-
-    def match_suffix_postrel(self, entry):
-        return self.match_suffix(entry) and self.match_postrel(entry)
-
-    def match_tag(self, entry):
-        return entry.tag == self.tag
-
-    def match_stem(self, entry):
-        return entry.stem == self.stem
-
     def __str__(self):
-        msg = 'Matcher({}'.format(self.condition)
+        attributes = []
         for attr in self.__slots__:
             val = getattr(self, attr)
             if val is None:
                 continue
-            msg += ', {}={}'.format(attr, val)
-        return msg + ')'
+            attributes.append('{}={}'.format(attr, val))
+        return 'Matcher{}'.format(attributes)
 
 
 class SentenceMatcher:

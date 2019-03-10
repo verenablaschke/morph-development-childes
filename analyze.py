@@ -80,19 +80,19 @@ def count_occurrences(corpus, matcher, results, verbose=True):
     return results
 
 
-matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
-            Matcher('form', form='in'),                          # 2./3. in
-            Matcher('form', form='on'),                          # 2./3. on
-            Matcher('infl_suffix_expl', infl='PL', suffix='s'),  # 4. regular PL
-            Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
-            Matcher('suffix_postrel', post_rel='POSS', suffix=['\'s', 's\'']),  # 6. POSS -'s/-s'
-            SentenceMatcher(Matcher('tag_rel_stem', tag='cop', stem='be', rel=['ROOT', 'COMP', 'INCROOT']), 'uncontractible'),  # 7. uncontractible COP
-            Matcher('form', form=['the', 'a', 'an']),                  # 8. the, a
-            Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST
-            Matcher('infl_suffix_expl', infl='3S', suffix='s'),  # 10. regular 3.SG
-            Matcher('tag_infl_fusion', tag='v', infl='3S'),  # 11. irregular 3.SG
-            SentenceMatcher(Matcher('tagorrel_stem', tag='aux', rel='AUX', stem='be'), 'uncontractible'),  # 12. uncontractible AUX
-            # 13. contractible COP
+matchers = [Matcher(infl='PRESP'),                       # 1. -ing
+            Matcher(form='in'),                          # 2./3. in
+            Matcher(form='on'),                          # 2./3. on
+            Matcher(infl_affix='PL', suffix='s'),  # 4. regular PL
+            Matcher(infl_fusion='PAST'),                 # 5. irregular PAST
+            Matcher(post_rel='POSS', suffix=['\'s', 's\'']),  # 6. POSS -'s/-s'
+            SentenceMatcher(Matcher(tag='cop', stem='be', rel=['ROOT', 'COMP', 'INCROOT']), 'uncontractible'),  # 7. uncontractible COP
+            Matcher(form=['the', 'a', 'an']),                  # 8. the, a
+            Matcher(infl_affix='PAST', suffix='ed'),  # 9. regular PAST
+            Matcher(infl_affix='3S', suffix='s'),  # 10. regular 3.SG
+            Matcher(tag='v', infl_fusion='3S'),  # 11. irregular 3.SG
+            SentenceMatcher(Matcher(tag='aux', stem='be'), 'uncontractible'),  # 12. uncontractible AUX
+            Matcher(sfx_tag='cop', sfx='be', post_rel=['ROOT', 'COMP', 'INCROOT']),  # 13. contractible COP
             # 14. contractible AUX
             ]
 
