@@ -39,9 +39,9 @@ def visualize(results, compare_adult,
     min_month, max_month = -1, -1  # earliest/latest month
 
     for (query, r), col in zip(results.items(), colours):
-        if verbose:
-            print(query, r)
         months = sorted(r.keys())
+        if verbose:
+            print(query, [(key, r[key]) for key in months])
 
         # Get the dimensions of the graph.
         if min_month == -1 or min_month > months[0]:
@@ -98,6 +98,6 @@ def visualize(results, compare_adult,
     if filename is not None:
         fig = plt.gcf()
         fig.set_size_inches(18, 9)
-        fig.savefig(filename, bbox_inches='tight', dpi=400)
+        fig.savefig(filename + '.png', bbox_inches='tight', dpi=400)
     if display:
         plt.show()

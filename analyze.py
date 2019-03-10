@@ -37,6 +37,9 @@ def count_occurrences(corpus, matcher, results, verbose=True):
         print(AGE_ERROR_MSG)
         sys.stderr.write('{}(s) {}.\n'.format(AGE_ERROR_MSG, corpus.fileids()))
         return results
+    if age > 60:  # Data sparsity.
+        print('Skipping file (age > 60 months).')
+        return results
 
     n_utt_chi = 0  # number of utterances by the child
     n_occ_chi = 0  # number of occurrences of the feature in the child's speech
@@ -55,7 +58,7 @@ def count_occurrences(corpus, matcher, results, verbose=True):
         n_occ_par += analyze_sentence('PAR', matcher, sent, verbose)
 
     # Add the numbers of utterances/occurrences to the results dictionary.
-    if n_utt_chi > 50:  # TODO smooth?
+    if n_utt_chi > 0:
         matcher_str = matcher.label
         try:  # Try to update an existing entry.
             prev_counts = results[matcher_str][age]
@@ -110,12 +113,13 @@ matchers = [Matcher('1. present participle', infl='PRESP'),
 # Results:
 # {query -> {age -> [n_occ_chi, n_utt_chi, n_occ_par, n_utt_par]}}
 results = {}
-for f in glob.glob('data/*/*/*.xml'):
+for f in glob.glob('data/**/*.xml'):
     f = f.replace('\\', '/')[5:]
+    sys.stderr.write('Reading {}.'.format(f))  # TODO delete
     for matcher in matchers:
         results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
                                     matcher,
                                     results)
 
-visualize(results, compare_adult=False, filename='output/total.png')
-visualize(results, compare_adult=True, filename='output/adult.png')
+visualize(results, compare_adult=False, filename='output/total', display=False)
+visualize(results, compare_adult=True, filename='output/compare', display=False)
