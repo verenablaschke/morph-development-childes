@@ -16,13 +16,15 @@ def analyze_sentence(speaker, matcher, sent, verbose):
         if matcher.match(sent):
             occ += 1
             if verbose:
-                print(speaker, ':', sent)
+                print(speaker, ':', ' '.join([word.form for word in sent]))
+                print(sent)
     else:
         for entry in sent:
             if matcher.match(entry):
                 occ += 1
                 if verbose:
-                    print(speaker, ':', sent)
+                    print(speaker, ':', ' '.join([word.form for word in sent]))
+                    print(sent)
     return occ
 
 
@@ -93,7 +95,7 @@ matchers = [Matcher(infl='PRESP'),                       # 1. -ing
             Matcher(tag='v', infl_fusion='3S'),  # 11. irregular 3.SG
             SentenceMatcher(Matcher(tag='aux', stem='be'), 'uncontractible'),  # 12. uncontractible AUX
             Matcher(sfx_tag='cop', sfx='be', post_rel=['ROOT', 'COMP', 'INCROOT']),  # 13. contractible COP
-            # 14. contractible AUX
+            Matcher(sfx_tag='aux', sfx='be', post_rel='AUX')  # 14. contractible AUX
             ]
 
 # Results:

@@ -66,20 +66,14 @@ class Matcher:
     def match_rel(self, entry):
         return self.check_identity_or_in(entry, 'rel')
 
-    def match_postrel(self, entry):
+    def match_post_rel(self, entry):
         return self.check_identity_or_in(entry, 'post_rel')
 
     # https://talkbank.org/manuals/MOR.html#Mor_Markers_Suffix
     def match_infl(self, entry, infl_type=None):
-        infl_present = False
-        if self.infl:
-            infl_present = self.check_identity_or_in(entry, 'infl')
-        elif self.infl_affix:
-            infl_present = self.check_identity_or_in(entry, 'infl_affix')
-        elif self.infl_fusion:
-            infl_present = self.check_identity_or_in(entry, 'infl_fusion')
-
-        return infl_present \
+        return (self.check_identity_or_in(entry, 'infl') if self.infl
+                else self.check_identity_or_in(entry, 'infl_affix') if self.infl_affix
+                else self.check_identity_or_in(entry, 'infl_fusion')) \
             and (infl_type is None or entry.infl_type == infl_type)
 
     # Morphologically/phonologically distinct inflectional affix.
