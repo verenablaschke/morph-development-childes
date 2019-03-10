@@ -1,0 +1,256 @@
+Matcher['infl=PRESP']
+['test.xml'] 46
+CHI : are you making part of my train
+[<are, aux, be | PRES, sfxf |  | INCROOT,  | , >, <you, pro:per, you | ,  |  | OBJ,  | , >, <making, part, make | PRESP, sfx |  | XMOD,  | , >, <part, n, part | ,  |  | OBJ,  | , >, <of, prep, of | ,  |  | NJCT,  | , >, <my, det:poss, my | ,  |  | MOD,  | , >, <train, n, train | ,  |  | POBJ,  | , >]
+CHI : Mommy it's tipping over
+[<Mommy, n:prop, Mommy | ,  |  | LINK,  | , >, <it's, pro:per, it | ,  |  | SUBJ, AUX | be, aux>, <tipping, part, tip | PRESP, sfx |  | ROOT,  | , >, <over, adv, over | ,  |  | JCT,  | , >]
+PAR : are you going to shave again
+[<are, aux, be | PRES, sfxf |  | AUX,  | , >, <you, pro:per, you | ,  |  | SUBJ,  | , >, <going, part, go | PRESP, sfx |  | ROOT,  | , >, <to, inf, to | ,  |  | INF,  | , >, <shave, v, shave | ,  |  | COMP,  | , >, <again, adv, again | ,  |  | JCT,  | , >]
+CHI: 2 occurrences | 12 utterances | ratio: 0.16666666666666666
+PAR: 1 occurrences | 6 utterances | ratio: 0.16666666666666666
+
+Matcher['form=in']
+['test.xml'] 46
+CHI : how do they put their foots in there
+[<how, pro:rel, how | ,  |  | LINK,  | , >, <do, mod, do | ,  |  | AUX,  | , >, <they, pro:sub, they | ,  |  | SUBJ,  | , >, <put, v, put | ZERO, sfxf |  | ROOT,  | , >, <their, det:poss, their | ,  |  | MOD,  | , >, <foots, n, foot | PL, sfxf | feet | OBJ,  | , >, <in, prep, in | ,  |  | JCT,  | , >, <there, adv, there | ,  |  | POBJ,  | , >]
+CHI: 1 occurrences | 12 utterances | ratio: 0.08333333333333333
+PAR: 0 occurrences | 6 utterances | ratio: 0.0
+
+Matcher['form=on']
+['test.xml'] 46
+CHI : Mommy what did you put on dere
+[<Mommy, n:prop, Mommy | ,  |  | LINK,  | , >, <what, pro:int, what | ,  |  | SUBJ,  | , >, <did, mod, do | PAST, sfxf |  | AUX,  | , >, <you, pro:per, you | ,  |  | SUBJ,  | , >, <put, v, put | ZERO, sfxf |  | ROOT,  | , >, <on, prep, on | ,  |  | JCT,  | , >, <dere, adv, there | ,  | there | POBJ,  | , >]
+CHI: 1 occurrences | 12 utterances | ratio: 0.08333333333333333
+PAR: 0 occurrences | 6 utterances | ratio: 0.0
+
+Matcher['infl=PL', 'infl_affix=PL', 'suffix=s']
+['test.xml'] 46
+PAR : I'll tie your shoes
+[<I'll, pro:sub, I | ,  |  | SUBJ, AUX | will, mod>, <tie, v, tie | ,  |  | ROOT,  | , >, <your, det:poss, your | ,  |  | MOD,  | , >, <shoes, n, shoe | PL, sfx |  | OBJ,  | , >]
+CHI: 0 occurrences | 12 utterances | ratio: 0.0
+PAR: 1 occurrences | 6 utterances | ratio: 0.16666666666666666
+
+Matcher['infl=PAST', 'infl_fusion=PAST']
+['test.xml'] 46
+CHI : dat was just a accident
+[<dat, pro:dem, that | ,  | that | SUBJ,  | , >, <was, cop, be | PAST, sfxf |  | ROOT,  | , >, <just, adv, just | ,  |  | JCT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <accident, n, accident | ,  |  | PRED,  | , >]
+CHI : Mommy what did you put on dere
+[<Mommy, n:prop, Mommy | ,  |  | LINK,  | , >, <what, pro:int, what | ,  |  | SUBJ,  | , >, <did, mod, do | PAST, sfxf |  | AUX,  | , >, <you, pro:per, you | ,  |  | SUBJ,  | , >, <put, v, put | ZERO, sfxf |  | ROOT,  | , >, <on, prep, on | ,  |  | JCT,  | , >, <dere, adv, there | ,  | there | POBJ,  | , >]
+CHI: 2 occurrences | 12 utterances | ratio: 0.16666666666666666
+PAR: 0 occurrences | 6 utterances | ratio: 0.0
+
+Matcher['suffix=["\'s", "s\'"]', 'post_rel=POSS']
+['test.xml'] 46
+PAR : if a cat's baby is called a kitten what's a dog's baby called
+[<if, conj, if | ,  |  | LINK,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <cat's, n, cat | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | SUBJ,  | , >, <is, aux, be | 3S, sfxf |  | AUX,  | , >, <called, part, call | PASTP, sfx |  | ROOT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <kitten, n, kitten | ,  |  | OBJ,  | , >, <what's, pro:int, what | ,  |  | JCT, POSS | be, aux>, <a, det:art, a | ,  |  | DET,  | , >, <dog's, n, dog | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | PRED,  | , >, <called, part, call | PASTP, sfx |  | XMOD,  | , >]
+PAR : if a cat's baby is called a kitten what's a dog's baby called
+[<if, conj, if | ,  |  | LINK,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <cat's, n, cat | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | SUBJ,  | , >, <is, aux, be | 3S, sfxf |  | AUX,  | , >, <called, part, call | PASTP, sfx |  | ROOT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <kitten, n, kitten | ,  |  | OBJ,  | , >, <what's, pro:int, what | ,  |  | JCT, POSS | be, aux>, <a, det:art, a | ,  |  | DET,  | , >, <dog's, n, dog | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | PRED,  | , >, <called, part, call | PASTP, sfx |  | XMOD,  | , >]
+PAR : if a cat's baby is called a kitten what's a dog's baby called
+[<if, conj, if | ,  |  | LINK,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <cat's, n, cat | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | SUBJ,  | , >, <is, aux, be | 3S, sfxf |  | AUX,  | , >, <called, part, call | PASTP, sfx |  | ROOT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <kitten, n, kitten | ,  |  | OBJ,  | , >, <what's, pro:int, what | ,  |  | JCT, POSS | be, aux>, <a, det:art, a | ,  |  | DET,  | , >, <dog's, n, dog | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | PRED,  | , >, <called, part, call | PASTP, sfx |  | XMOD,  | , >]
+PAR : is it Ursula's too
+[<is, cop, be | 3S, sfxf |  | ROOT,  | , >, <it, pro:per, it | ,  |  | PRED,  | , >, <Ursula's, n:prop, Ursula | ,  |  | OBJ, POSS | be, aux>, <too, post, too | ,  |  | PQ,  | , >]
+CHI: 0 occurrences | 12 utterances | ratio: 0.0
+PAR: 4 occurrences | 6 utterances | ratio: 0.6666666666666666
+
+SentenceMatcher(Matcher["rel=['ROOT', 'COMP', 'INCROOT']", 'tag=cop', 'stem=be'], uncontractible)
+['test.xml'] 46
+CHI : is dis de motor
+[<is, cop, be | 3S, sfxf |  | ROOT,  | , >, <dis, pro:dem, this | ,  | this | DET,  | , >, <de, det:art, the | ,  | the | DET,  | , >, <motor, n, motor | ,  |  | PRED,  | , >]
+CHI : d you know where the razor is
+[<d, mod, do | ,  |  | AUX,  | , >, <you, pro:per, you | ,  |  | SUBJ,  | , >, <know, v, know | ,  |  | ROOT,  | , >, <where, pro:int, where | ,  |  | OBJ,  | , >, <the, det:art, the | ,  |  | DET,  | , >, <razor, n, razor | ,  |  | SUBJ,  | , >, <is, cop, be | 3S, sfxf |  | COMP,  | , >]
+CHI : dat was just a accident
+[<dat, pro:dem, that | ,  | that | SUBJ,  | , >, <was, cop, be | PAST, sfxf |  | ROOT,  | , >, <just, adv, just | ,  |  | JCT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <accident, n, accident | ,  |  | PRED,  | , >]
+PAR : is it Ursula's too
+[<is, cop, be | 3S, sfxf |  | ROOT,  | , >, <it, pro:per, it | ,  |  | PRED,  | , >, <Ursula's, n:prop, Ursula | ,  |  | OBJ, POSS | be, aux>, <too, post, too | ,  |  | PQ,  | , >]
+PAR : that's a saddle isn't it
+[<that's, pro:dem, that | ,  |  | SUBJ, ROOT | be, cop>, <a, det:art, a | ,  |  | DET,  | , >, <saddle, n, saddle | ,  |  | SUBJ,  | , >, <isn't, cop, be | 3S, sfxf |  | COMP, NEG | not, neg>, <it, pro:per, it | ,  |  | PRED,  | , >]
+CHI: 3 occurrences | 12 utterances | ratio: 0.25
+PAR: 2 occurrences | 6 utterances | ratio: 0.3333333333333333
+
+Matcher["form=['the', 'a', 'an']"]
+['test.xml'] 46
+CHI : d you know where the razor is
+[<d, mod, do | ,  |  | AUX,  | , >, <you, pro:per, you | ,  |  | SUBJ,  | , >, <know, v, know | ,  |  | ROOT,  | , >, <where, pro:int, where | ,  |  | OBJ,  | , >, <the, det:art, the | ,  |  | DET,  | , >, <razor, n, razor | ,  |  | SUBJ,  | , >, <is, cop, be | 3S, sfxf |  | COMP,  | , >]
+CHI : has a plug
+[<has, v, have | 3S, sfxf |  | ROOT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <plug, n, plug | ,  |  | OBJ,  | , >]
+CHI : dat was just a accident
+[<dat, pro:dem, that | ,  | that | SUBJ,  | , >, <was, cop, be | PAST, sfxf |  | ROOT,  | , >, <just, adv, just | ,  |  | JCT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <accident, n, accident | ,  |  | PRED,  | , >]
+PAR : if a cat's baby is called a kitten what's a dog's baby called
+[<if, conj, if | ,  |  | LINK,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <cat's, n, cat | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | SUBJ,  | , >, <is, aux, be | 3S, sfxf |  | AUX,  | , >, <called, part, call | PASTP, sfx |  | ROOT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <kitten, n, kitten | ,  |  | OBJ,  | , >, <what's, pro:int, what | ,  |  | JCT, POSS | be, aux>, <a, det:art, a | ,  |  | DET,  | , >, <dog's, n, dog | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | PRED,  | , >, <called, part, call | PASTP, sfx |  | XMOD,  | , >]
+PAR : if a cat's baby is called a kitten what's a dog's baby called
+[<if, conj, if | ,  |  | LINK,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <cat's, n, cat | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | SUBJ,  | , >, <is, aux, be | 3S, sfxf |  | AUX,  | , >, <called, part, call | PASTP, sfx |  | ROOT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <kitten, n, kitten | ,  |  | OBJ,  | , >, <what's, pro:int, what | ,  |  | JCT, POSS | be, aux>, <a, det:art, a | ,  |  | DET,  | , >, <dog's, n, dog | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | PRED,  | , >, <called, part, call | PASTP, sfx |  | XMOD,  | , >]
+PAR : if a cat's baby is called a kitten what's a dog's baby called
+[<if, conj, if | ,  |  | LINK,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <cat's, n, cat | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | SUBJ,  | , >, <is, aux, be | 3S, sfxf |  | AUX,  | , >, <called, part, call | PASTP, sfx |  | ROOT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <kitten, n, kitten | ,  |  | OBJ,  | , >, <what's, pro:int, what | ,  |  | JCT, POSS | be, aux>, <a, det:art, a | ,  |  | DET,  | , >, <dog's, n, dog | ,  |  | MOD, POSS | be, aux>, <baby, n, baby | ,  |  | PRED,  | , >, <called, part, call | PASTP, sfx |  | XMOD,  | , >]
+PAR : that's a saddle isn't it
+[<that's, pro:dem, that | ,  |  | SUBJ, ROOT | be, cop>, <a, det:art, a | ,  |  | DET,  | , >, <saddle, n, saddle | ,  |  | SUBJ,  | , >, <isn't, cop, be | 3S, sfxf |  | COMP, NEG | not, neg>, <it, pro:per, it | ,  |  | PRED,  | , >]
+CHI: 3 occurrences | 12 utterances | ratio: 0.25
+PAR: 4 occurrences | 6 utterances | ratio: 0.6666666666666666
+
+Matcher['infl=PAST', 'infl_affix=PAST', 'suffix=ed']
+['test.xml'] 46
+CHI : it dropped
+[<it, pro:per, it | ,  |  | SUBJ,  | , >, <dropped, v, drop | PAST, sfx |  | ROOT,  | , >]
+CHI: 1 occurrences | 12 utterances | ratio: 0.08333333333333333
+PAR: 0 occurrences | 6 utterances | ratio: 0.0
+
+Matcher['infl=3S', 'infl_affix=3S', 'suffix=s']
+['test.xml'] 46
+PAR : wait till it stops
+[<wait, co, wait | ,  |  | COM,  | , >, <till, v, till | ,  |  | ROOT,  | , >, <it, pro:per, it | ,  |  | SUBJ,  | , >, <stops, v, stop | 3S, sfx |  | COMP,  | , >]
+CHI: 0 occurrences | 12 utterances | ratio: 0.0
+PAR: 1 occurrences | 6 utterances | ratio: 0.16666666666666666
+
+Matcher['infl=3S', 'infl_fusion=3S', 'tag=v']
+['test.xml'] 46
+CHI : has a plug
+[<has, v, have | 3S, sfxf |  | ROOT,  | , >, <a, det:art, a | ,  |  | DET,  | , >, <plug, n, plug | ,  |  | OBJ,  | , >]
+CHI: 1 occurrences | 12 utterances | ratio: 0.08333333333333333
+PAR: 0 occurrences | 6 utterances | ratio: 0.0
+
+SentenceMatcher(Matcher['tag=aux', 'stem=be'], uncontractible)
+['test.xml'] 46
+CHI : are you making part of my train
+[<are, aux, be | PRES, sfxf |  | INCROOT,  | , >, <you, pro:per, you | ,  |  | OBJ,  | , >, <making, part, make | PRESP, sfx |  | XMOD,  | , >, <part, n, part | ,  |  | OBJ,  | , >, <of, prep, of | ,  |  | NJCT,  | , >, <my, det:poss, my | ,  |  | MOD,  | , >, <train, n, train | ,  |  | POBJ,  | , >]
+PAR : are you going to shave again
+[<are, aux, be | PRES, sfxf |  | AUX,  | , >, <you, pro:per, you | ,  |  | SUBJ,  | , >, <going, part, go | PRESP, sfx |  | ROOT,  | , >, <to, inf, to | ,  |  | INF,  | , >, <shave, v, shave | ,  |  | COMP,  | , >, <again, adv, again | ,  |  | JCT,  | , >]
+CHI: 1 occurrences | 12 utterances | ratio: 0.08333333333333333
+PAR: 1 occurrences | 6 utterances | ratio: 0.16666666666666666
+
+Matcher["post_rel=['ROOT', 'COMP', 'INCROOT']", 'sfx=be', 'sfx_tag=cop']
+['test.xml'] 46
+CHI : it's your birthday too
+[<it's, pro:per, it | ,  |  | SUBJ, ROOT | be, cop>, <your, det:poss, your | ,  |  | MOD,  | , >, <birthday, n, birth | ,  |  | PRED,  | , >, <too, post, too | ,  |  | PQ,  | , >]
+PAR : that's a saddle isn't it
+[<that's, pro:dem, that | ,  |  | SUBJ, ROOT | be, cop>, <a, det:art, a | ,  |  | DET,  | , >, <saddle, n, saddle | ,  |  | SUBJ,  | , >, <isn't, cop, be | 3S, sfxf |  | COMP, NEG | not, neg>, <it, pro:per, it | ,  |  | PRED,  | , >]
+CHI: 1 occurrences | 12 utterances | ratio: 0.08333333333333333
+PAR: 1 occurrences | 6 utterances | ratio: 0.16666666666666666
+
+Matcher['post_rel=AUX', 'sfx=be', 'sfx_tag=aux']
+['test.xml'] 46
+CHI : Mommy it's tipping over
+[<Mommy, n:prop, Mommy | ,  |  | LINK,  | , >, <it's, pro:per, it | ,  |  | SUBJ, AUX | be, aux>, <tipping, part, tip | PRESP, sfx |  | ROOT,  | , >, <over, adv, over | ,  |  | JCT,  | , >]
+CHI: 1 occurrences | 12 utterances | ratio: 0.08333333333333333
+PAR: 0 occurrences | 6 utterances | ratio: 0.0
+
+
+--- Visualizing None
+Matcher['infl=PRESP'] {46: [2, 12, 1, 6]}
+month: 46 entries: [2, 12, 1, 6]
+months_ok [46]
+entries_ok [0.16666666666666666]
+Matcher['form=in'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+months_ok [46]
+entries_ok [0.08333333333333333]
+Matcher['form=on'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+months_ok [46]
+entries_ok [0.08333333333333333]
+Matcher['infl=PL', 'infl_affix=PL', 'suffix=s'] {46: [0, 12, 1, 6]}
+No adult entries for month 46, query=.
+months_ok []
+entries_ok []
+Matcher['infl=PAST', 'infl_fusion=PAST'] {46: [2, 12, 0, 6]}
+month: 46 entries: [2, 12, 0, 6]
+months_ok [46]
+entries_ok [0.16666666666666666]
+Matcher['suffix=["\'s", "s\'"]', 'post_rel=POSS'] {46: [0, 12, 4, 6]}
+No adult entries for month 46, query=.
+months_ok []
+entries_ok []
+SentenceMatcher(Matcher["rel=['ROOT', 'COMP', 'INCROOT']", 'tag=cop', 'stem=be'], uncontractible) {46: [3, 12, 2, 6]}
+month: 46 entries: [3, 12, 2, 6]
+months_ok [46]
+entries_ok [0.25]
+Matcher["form=['the', 'a', 'an']"] {46: [3, 12, 4, 6]}
+month: 46 entries: [3, 12, 4, 6]
+months_ok [46]
+entries_ok [0.25]
+Matcher['infl=PAST', 'infl_affix=PAST', 'suffix=ed'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+months_ok [46]
+entries_ok [0.08333333333333333]
+Matcher['infl=3S', 'infl_affix=3S', 'suffix=s'] {46: [0, 12, 1, 6]}
+No adult entries for month 46, query=.
+months_ok []
+entries_ok []
+Matcher['infl=3S', 'infl_fusion=3S', 'tag=v'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+months_ok [46]
+entries_ok [0.08333333333333333]
+SentenceMatcher(Matcher['tag=aux', 'stem=be'], uncontractible) {46: [1, 12, 1, 6]}
+month: 46 entries: [1, 12, 1, 6]
+months_ok [46]
+entries_ok [0.08333333333333333]
+Matcher["post_rel=['ROOT', 'COMP', 'INCROOT']", 'sfx=be', 'sfx_tag=cop'] {46: [1, 12, 1, 6]}
+month: 46 entries: [1, 12, 1, 6]
+months_ok [46]
+entries_ok [0.08333333333333333]
+Matcher['post_rel=AUX', 'sfx=be', 'sfx_tag=aux'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+months_ok [46]
+entries_ok [0.08333333333333333]
+
+--- Visualizing None
+Matcher['infl=PRESP'] {46: [2, 12, 1, 6]}
+month: 46 entries: [2, 12, 1, 6]
+months_ok [46]
+entries_ok [1.0]
+Matcher['form=in'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+No adult entries for month 46, query=Matcher['form=in'].
+months_ok []
+entries_ok []
+Matcher['form=on'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+No adult entries for month 46, query=Matcher['form=on'].
+months_ok []
+entries_ok []
+Matcher['infl=PL', 'infl_affix=PL', 'suffix=s'] {46: [0, 12, 1, 6]}
+No adult entries for month 46, query=Matcher['infl=PL', 'infl_affix=PL', 'suffix=s'].
+months_ok []
+entries_ok []
+Matcher['infl=PAST', 'infl_fusion=PAST'] {46: [2, 12, 0, 6]}
+month: 46 entries: [2, 12, 0, 6]
+No adult entries for month 46, query=Matcher['infl=PAST', 'infl_fusion=PAST'].
+months_ok []
+entries_ok []
+Matcher['suffix=["\'s", "s\'"]', 'post_rel=POSS'] {46: [0, 12, 4, 6]}
+No adult entries for month 46, query=Matcher['suffix=["\'s", "s\'"]', 'post_rel=POSS'].
+months_ok []
+entries_ok []
+SentenceMatcher(Matcher["rel=['ROOT', 'COMP', 'INCROOT']", 'tag=cop', 'stem=be'], uncontractible) {46: [3, 12, 2, 6]}
+month: 46 entries: [3, 12, 2, 6]
+months_ok [46]
+entries_ok [0.75]
+Matcher["form=['the', 'a', 'an']"] {46: [3, 12, 4, 6]}
+month: 46 entries: [3, 12, 4, 6]
+months_ok [46]
+entries_ok [0.375]
+Matcher['infl=PAST', 'infl_affix=PAST', 'suffix=ed'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+No adult entries for month 46, query=Matcher['infl=PAST', 'infl_affix=PAST', 'suffix=ed'].
+months_ok []
+entries_ok []
+Matcher['infl=3S', 'infl_affix=3S', 'suffix=s'] {46: [0, 12, 1, 6]}
+No adult entries for month 46, query=Matcher['infl=3S', 'infl_affix=3S', 'suffix=s'].
+months_ok []
+entries_ok []
+Matcher['infl=3S', 'infl_fusion=3S', 'tag=v'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+No adult entries for month 46, query=Matcher['infl=3S', 'infl_fusion=3S', 'tag=v'].
+months_ok []
+entries_ok []
+SentenceMatcher(Matcher['tag=aux', 'stem=be'], uncontractible) {46: [1, 12, 1, 6]}
+month: 46 entries: [1, 12, 1, 6]
+months_ok [46]
+entries_ok [0.5]
+Matcher["post_rel=['ROOT', 'COMP', 'INCROOT']", 'sfx=be', 'sfx_tag=cop'] {46: [1, 12, 1, 6]}
+month: 46 entries: [1, 12, 1, 6]
+months_ok [46]
+entries_ok [0.5]
+Matcher['post_rel=AUX', 'sfx=be', 'sfx_tag=aux'] {46: [1, 12, 0, 6]}
+month: 46 entries: [1, 12, 0, 6]
+No adult entries for month 46, query=Matcher['post_rel=AUX', 'sfx=be', 'sfx_tag=aux'].
+months_ok []
+entries_ok []

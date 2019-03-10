@@ -110,7 +110,7 @@ for f in glob.glob('data/test.xml'):
                                     matcher,
                                     results)
 
-# visualize(results, compare_adult=False)
-# visualize(results, compare_adult=True)
+visualize(results, compare_adult=False)
+visualize(results, compare_adult=True)
 # visualize(results, compare_adult=False, filename='output/total.png')
 # visualize(results, compare_adult=True, filename='output/adult.png')
