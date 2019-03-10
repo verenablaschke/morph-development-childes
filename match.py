@@ -19,7 +19,12 @@ class Matcher:
             and entry.replacement == ''
 
     def match_form(self, entry):
-        return entry.form == self.form
+        if isinstance(self.form, str):
+            return entry.form == self.form
+        for f in self.form:
+            if entry.form == f:
+                return True
+        return False
 
     def match_suffix(self, entry):
         if isinstance(self.suffix, str):
@@ -94,6 +99,8 @@ class SentenceMatcher:
             if self.matcher.match(entry):
                 if aux_matcher and entry.stem == 'do':
                     continue
+                if entry.sfx_tag == 'neg' or entry.infl == 'PAST':
+                    return True
                 match = i
                 break
 

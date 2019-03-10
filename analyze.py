@@ -87,8 +87,7 @@ matchers = [Matcher('infl', infl='PRESP'),                       # 1. -ing
             Matcher('infl_fusion', infl='PAST'),                 # 5. irregular PAST
             Matcher('suffix_postrel', post_rel='POSS', suffix=['\'s', 's\'']),  # 6. POSS -'s/-s'
             SentenceMatcher(Matcher('tag_rel', tag='cop', rel=['ROOT', 'COMP']), 'uncontractible'),  # 7. uncontractible COP
-            Matcher('form', form='the'),                         # 8. the, a
-            Matcher('form', form='a'),                           # 8. the, a
+            Matcher('form', form=['the', 'a', 'an']),                  # 8. the, a
             Matcher('infl_suffix_expl', infl='PAST', suffix='ed'),  # 9. regular PAST
             Matcher('infl_suffix_expl', infl='3S', suffix='s'),  # 10. regular 3.SG
             Matcher('tag_infl_fusion', tag='v', infl='3S'),  # 11. irregular 3.SG

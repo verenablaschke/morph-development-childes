@@ -2,7 +2,7 @@
 
 Project for the course [ENG-3040 First Language Acquisition](https://en.uit.no/education/courses/course?p_document_id=567082) at Universitetet i Tromsø, spring semester 2019.
 
-Order of acquisition of functional morphemes in English. Fourteen morphemes/categories presented by Brown (1973, p. 274):
+Order of acquisition of functional morphemes in English. Fourteen morphemes/categories presented by Brown (1973, pp. 254--274) (see also Owens (2015, pp. 274--286)):
 
 |       | feature                  |
 |-------|--------------------------|
@@ -10,15 +10,15 @@ Order of acquisition of functional morphemes in English. Fourteen morphemes/cate
 | 2./3. | in, on                   |
 | 4.    | regular plural           |
 | 5.    | irregular past tense     |
-| 6.    | possessive               |
+| 6.    | possessive -'s/-s'              |
 | 7.    | uncontractible copula    |
-| 8.    | articles                 |
+| 8.    | articles (the, a)                 |
 | 9.    | regular past tense       |
 | 10.   | regular 3.sg.pres        |
 | 11.   | irregular 3.sg.pres      |
-| 12.   | uncontractible auxiliary |
+| 12.   | uncontractible auxiliary 'to be' |
 | 13.   | contractible copula      |
-| 14.   | contractible auxiliary   |
+| 14.   | contractible auxiliary 'to be'  |
 
 O'Grady (2005, p. 94):
 > He decided that he would say that an ending or aword had been “acquired” if it appeared in 90 percent or more of the contexts where it was needed in three consecutive recording sessions. (The sessions were held about two weeks apart over a period of many months.)
@@ -38,3 +38,5 @@ Bird, Steven, Ewan Klein, and Edward Loper. _Natural Language Processing with Py
 Brown, Roger. _A first language: The early stages._ Harvard U. Press, 1973.
 
 O'Grady, William. _How children learn language._ Cambridge University Press, 2005.
+
+Owens Jr, Robert E. _Language development: An introduction._ 8th Edition. Pearson, 2015.
