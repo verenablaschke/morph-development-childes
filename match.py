@@ -11,7 +11,11 @@ class Matcher:
         self.form = form
         self.infl = infl
         self.infl_affix = infl_affix
+        if infl_affix:
+            self.infl = infl_affix
         self.infl_fusion = infl_fusion
+        if infl_fusion:
+            self.infl = infl_fusion
         self.suffix = suffix
         self.rel = rel
         self.post_rel = post_rel
@@ -71,21 +75,17 @@ class Matcher:
 
     # https://talkbank.org/manuals/MOR.html#Mor_Markers_Suffix
     def match_infl(self, entry, infl_type=None):
-        return (self.check_identity_or_in(entry, 'infl') if self.infl
-                else self.check_identity_or_in(entry, 'infl_affix') if self.infl_affix
-                else self.check_identity_or_in(entry, 'infl_fusion')) \
-            and (infl_type is None or entry.infl_type == infl_type)
+        return self.check_identity_or_in(entry, 'infl')
 
     # Morphologically/phonologically distinct inflectional affix.
     # https://talkbank.org/manuals/MOR.html#Mor_Markers_Suffix
     def match_infl_affix(self, entry):
-        return self.match_infl(entry, infl_type='sfx')
+        return entry.infl_type == 'sfx'
 
     # Inflectional morpheme(s) that is (are) fused with the stem.
     # https://talkbank.org/manuals/MOR.html#Mor_Markers_Suffix_Fusional
     def match_infl_fusion(self, entry):
-        return self.match_infl(entry, infl_type='sfxf') \
-            and entry.replacement == ''
+        return entry.infl_type == 'sfxf'
 
     def __str__(self):
         attributes = []
