@@ -115,7 +115,6 @@ matchers = [Matcher('1. present participle', infl='PRESP'),
 results = {}
 for f in glob.glob('data/**/*.xml'):
     f = f.replace('\\', '/')[5:]
-    sys.stderr.write('Reading {}.'.format(f))  # TODO delete
     for matcher in matchers:
         results = count_occurrences(CHILDESMorphFileReader(DATA_PATH, f),
                                     matcher,

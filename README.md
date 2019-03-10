@@ -31,6 +31,14 @@ In how far does this hold up to for a larger English corpus?
 The code is written in Python 3.6.7.
 I use a version of NLTK's (Bird et al., 2009) corpus reader that I modified to parse the XML files of the CHILDES transcripts.
 
+## Usage
+
+Requires Python 3, and the libraries nltk, numpy, matplotlib.
+
+```
+python analyze.py
+```
+
 ## References
 
 Bird, Steven, Ewan Klein, and Edward Loper. _Natural Language Processing with Python: Analyzing Text with the Natural Language Toolkit._ O'Reilly Media, Inc., 2009.
