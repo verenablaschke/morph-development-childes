@@ -24,6 +24,7 @@ O'Grady (2005, p. 94):
 > He decided that he would say that an ending or aword had been “acquired” if it appeared in 90 percent or more of the contexts where it was needed in three consecutive recording sessions. (The sessions were held about two weeks apart over a period of many months.)
 
 In how far does this hold up to for a larger English corpus?
+What are the shortcomings of an automated, quantitative analysis, given that it is more coarse than manual inspection of the data?
 
 
 ## Implementation
