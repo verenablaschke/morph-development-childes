@@ -1,8 +1,8 @@
 # Acquisition Order of Functional Morphemes
 
-Project for the course [ENG-3040 First Language Acquisition](https://en.uit.no/education/courses/course?p_document_id=567082) at Universitetet i Tromsø, spring semester 2019.
+Mid-term project for the course [ENG-3040 First Language Acquisition](https://en.uit.no/education/courses/course?p_document_id=567082) at Universitetet i Tromsø, spring semester 2019.
 
-Order of acquisition of functional morphemes in English. Fourteen morphemes/categories presented by Brown (1973, pp. 254--274) (see also Owens (2012, pp. 274--286)):
+Fourteen functional morphemes/categories in the English language and their order of acquisition, as presented by Brown (1973, pp. 254--274) (see also Owens (2012, pp. 274--286)):
 
 |       | feature                  |
 |-------|--------------------------|
@@ -21,10 +21,10 @@ Order of acquisition of functional morphemes in English. Fourteen morphemes/cate
 | 14.   | contractible auxiliary 'to be'  |
 
 O'Grady (2005, p. 94):
-> He decided that he would say that an ending or aword had been “acquired” if it appeared in 90 percent or more of the contexts where it was needed in three consecutive recording sessions. (The sessions were held about two weeks apart over a period of many months.)
+> [A]n ending or a word had been “acquired” if it appeared in 90 percent or more of the contexts where it was needed in three consecutive recording sessions. (The sessions were held about two weeks apart over a period of many months.)
 
-In how far does this hold up to for a larger English corpus?
-What are the shortcomings of an automated, quantitative analysis, given that it is more coarse than manual inspection of the data?
+**To what extent does this hold up to for a larger English corpus?**
+What are the **shortcomings of an automated, quantitative analysis,** given that it is more coarse than manual inspection of the data?
 
 
 ## Implementation
